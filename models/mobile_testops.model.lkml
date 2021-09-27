@@ -12,6 +12,8 @@ persist_with: mobile_testops_default_datagroup
 
 explore: songs {}
 
+explore: report_test_coverage {}
+
 explore: songs2 {
   join: songs {
     type: left_outer
