@@ -10,16 +10,7 @@ datagroup: mobile_testops_default_datagroup {
 
 persist_with: mobile_testops_default_datagroup
 
-explore: songs {}
 
 explore: report_test_coverage {}
 
 explore: report_test_coverage_last {}
-
-explore: songs2 {
-  join: songs {
-    type: left_outer
-    sql_on: ${songs2.song_id} = ${songs.song_id} ;;
-    relationship: many_to_one
-  }
-}
