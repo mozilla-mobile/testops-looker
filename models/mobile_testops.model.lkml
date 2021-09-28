@@ -14,6 +14,8 @@ explore: songs {}
 
 explore: report_test_coverage {}
 
+explore: report_test_coverage_last {}
+
 explore: songs2 {
   join: songs {
     type: left_outer
