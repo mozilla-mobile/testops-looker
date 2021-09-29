@@ -10,7 +10,8 @@ datagroup: mobile_testops_default_datagroup {
 
 persist_with: mobile_testops_default_datagroup
 
-
 explore: report_test_coverage {}
+
+explore: report_test_coverage_show_status {}
 
 explore: report_test_coverage_last {}
