@@ -12,6 +12,8 @@ persist_with: mobile_testops_default_datagroup
 
 explore: report_test_coverage {}
 
+explore: sql_runner_query_pie_chart {}
+
 explore: report_test_coverage_show_status {}
 
 explore: report_test_coverage_last {}
