@@ -15,3 +15,5 @@ explore: report_test_coverage {}
 explore: report_test_coverage_show_status {}
 
 explore: report_test_coverage_last {}
+
+explore: report_test_runs {}
