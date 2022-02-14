@@ -16,4 +16,10 @@ explore: report_test_coverage_show_status {}
 
 explore: report_test_coverage_last {}
 
-explore: report_test_runs {}
+explore: report_test_run_counts {}
+
+explore: report_test_case_coverage {}
+
+explore: report_test_coverage_by_project {}
+
+explore: report_test_run_counts_proyect_and_sub_suites {}

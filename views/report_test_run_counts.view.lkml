@@ -1,5 +1,5 @@
-view: report_test_runs {
-  sql_table_name: `moz-mobile-tools.testops_dashboard.report_test_runs`
+view: report_test_run_counts {
+  sql_table_name: `moz-mobile-tools.testops_dashboard.report_test_run_counts`
     ;;
   drill_fields: [id]
 
