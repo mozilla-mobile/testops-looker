@@ -17,6 +17,11 @@ view: report_test_coverage_show_status {
     sql: ${TABLE}.test_count_sum ;;
   }
 
+  dimension: test_sub_suites_id {
+    type: number
+    sql: ${TABLE}.test_sub_suites_id ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []
