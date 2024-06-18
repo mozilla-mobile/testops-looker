@@ -31,3 +31,5 @@ explore: report_test_case_coverage_prod {}
 explore: report_test_coverage_by_project_prod {}
 
 explore: iriostestqarequests {}
+
+explore: irios_test_jira {}
