@@ -2,6 +2,7 @@ connection: "mobile_testops"
 
 # include all the views
 include: "/views/**/*.view"
+include: "/test_feature_usage.view.lkml"
 
 datagroup: mobile_testops_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
