@@ -36,3 +36,7 @@ explore: iriostestqarequests {}
 explore: irios_test_jira {}
 
 explore: katmerinotestresults {}
+
+explore: report_jira_qa_needed {}
+
+explore: report_jira_qa_requests {}
