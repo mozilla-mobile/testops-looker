@@ -38,3 +38,5 @@ explore: katmerinotestresults {}
 explore: report_jira_qa_needed {}
 
 explore: report_jira_qa_requests {}
+
+explore: irios_test_jira_desktop {}
