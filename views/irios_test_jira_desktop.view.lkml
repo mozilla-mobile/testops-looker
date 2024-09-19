@@ -57,6 +57,10 @@ view: irios_test_jira_desktop {
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.timestamp_field_8 ;;
   }
+  dimension: IssueType {
+    type: string
+    sql: ${TABLE}.IssueType ;;
+  }
   measure: count {
     type: count
   }
