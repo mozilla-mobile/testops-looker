@@ -2,7 +2,7 @@
 view: report_bugzilla_qe_needed {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: `moz-mobile-tools.staging.report_bugzilla_qe_needed` ;;
+  sql_table_name: `moz-mobile-tools.testops_dashboard.report_bugzilla_qe_needed` ;;
   drill_fields: [id]
 
   # This primary key is the unique key for this table in the underlying database.

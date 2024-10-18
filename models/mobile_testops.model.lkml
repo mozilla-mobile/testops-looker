@@ -44,3 +44,5 @@ explore: irios_test_jira_desktop {}
 explore: report_bugzilla_qe_needed {}
 
 explore: report_bugzilla_qe_needed_count_staging {}
+
+explore: report_bugzilla_qe_needed_count {}
