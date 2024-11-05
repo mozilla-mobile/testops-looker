@@ -48,9 +48,9 @@ view: report_test_case_coverage {
     sql: ${TABLE}.test_sub_suites_id ;;
   }
 
-  dimension: testrail_suites_id {
+  dimension: testrail_test_suites_id {
     type: number
-    sql: ${TABLE}.testrail_suites_id ;;
+    sql: ${TABLE}.testrail_test_suites_id ;;
   }
 
   measure: count {
