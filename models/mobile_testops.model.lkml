@@ -48,3 +48,5 @@ explore: report_bugzilla_qe_needed_count_staging {}
 explore: report_bugzilla_qe_needed_count {}
 
 explore: report_jira_qa_requests_new_issue_types {}
+
+explore: report_milestones {}
