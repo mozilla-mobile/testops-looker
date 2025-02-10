@@ -1,5 +1,5 @@
 view: report_milestones {
-  sql_table_name: `moz-mobile-tools.staging.report_milestones` ;;
+  sql_table_name: `moz-mobile-tools.staging.report_testrail_milestones` ;;
   drill_fields: [id]
 
   dimension: id {
@@ -28,17 +28,17 @@ view: report_milestones {
     type: string
     sql: ${TABLE}.is_completed ;;
   }
-  dimension: milestone_id {
+  dimension: testrail_milestone_id {
     type: number
-    sql: ${TABLE}.milestone_id ;;
+    sql: ${TABLE}.testrail_milestone_id ;;
   }
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;
   }
-  dimension: project_id {
-    type: string
-    sql: ${TABLE}.project_id ;;
+  dimension: projects_id {
+    type: number
+    sql: ${TABLE}.projects_id ;;
   }
   dimension_group: started {
     type: time
