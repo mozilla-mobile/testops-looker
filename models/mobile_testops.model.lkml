@@ -52,3 +52,5 @@ explore: report_jira_qa_requests_new_issue_types {}
 explore: report_milestones {}
 
 explore: dummy_daily {}
+
+explore: report_testrail_milestones {}
