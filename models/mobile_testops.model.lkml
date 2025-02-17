@@ -54,3 +54,5 @@ explore: report_milestones {}
 explore: dummy_daily {}
 
 explore: report_testrail_milestones {}
+
+explore: iosinsightsdummy {}
