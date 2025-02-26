@@ -56,3 +56,5 @@ explore: dummy_daily {}
 explore: report_testrail_milestones {}
 
 explore: iosinsightsdummy {}
+
+explore: iriostestreleasestestedview {}
