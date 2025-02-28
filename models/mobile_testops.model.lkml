@@ -58,3 +58,5 @@ explore: report_testrail_milestones {}
 explore: iosinsightsdummy {}
 
 explore: iriostestreleasestestedview {}
+
+explore: fenix_daily_android {}
