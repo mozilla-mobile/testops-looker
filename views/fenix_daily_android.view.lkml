@@ -19,15 +19,15 @@ view: fenix_daily_android {
   dimension: failure_rate {
     type: number
     description: "Failure rate as a percentage (e.g., 0.04% displayed as 4%)."
-    value_format: "0.##%"  # Formats as a percentage
-    sql: ${TABLE}.`Failure Rate` * 100 ;;
+    sql: ${TABLE}.`Failure Rate` ;;
+    value_format: "0.##%"  # Ensures percentage display
   }
 
   dimension: flaky_rate {
     type: number
     description: "Flaky rate as a percentage (e.g., 0.23% displayed as 23%)."
-    value_format: "0.##%"  # Formats as a percentage
-    sql: ${TABLE}.`Flaky Rate` * 100 ;;
+    sql: ${TABLE}.`Flaky Rate` ;;
+    value_format: "0.##%"  # Ensures percentage display
   }
 
   dimension: flaky_runs {
