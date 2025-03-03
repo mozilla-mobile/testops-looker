@@ -18,11 +18,13 @@ view: focus_daily_android {
     type: number
     description: "Percentage as a float (e.g., 0.0004 for 0.04%)."
     sql: ${TABLE}.`Failure Rate` ;;
+    value_format: "0.##%"  # Ensures percentage display
   }
   dimension: flaky_rate {
     type: number
     description: "Percentage as a float (e.g., 0.0023 for 0.23%)."
     sql: ${TABLE}.`Flaky Rate` ;;
+    value_format: "0.##%"  # Ensures percentage display
   }
   dimension: flaky_runs {
     type: number
