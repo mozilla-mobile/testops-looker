@@ -36,15 +36,18 @@ view: focus_daily_android {
     description: "Total number of test runs."
     sql: ${TABLE}.`Total Runs` ;;
   }
+
   measure: count {
     type: count
   }
+
   measure: monthly_failure_rate {
     type: number
     description: "Monthly failure rate calculated as total failed runs divided by total test runs."
     sql: SUM(${failed_runs}) / SUM(${total_runs}) ;;
     value_format: "0.##%"
   }
+
   measure: monthly_flaky_rate {
     type: number
     description: "Monthly flaky rate calculated as total flaky runs divided by total test runs."
