@@ -51,6 +51,7 @@ view: fenix_daily_android {
     description: "Monthly failure rate calculated as total failed runs divided by total test runs."
     sql: SUM(${failed_runs}) / SUM(${total_runs}) ;;
     value_format: "0.##%"
+    group_label: "Monthly Metrics"
   }
 
   measure: monthly_flaky_rate {
@@ -58,6 +59,7 @@ view: fenix_daily_android {
     description: "Monthly flaky rate calculated as total flaky runs divided by total test runs."
     sql: SUM(${flaky_runs}) / SUM(${total_runs}) ;;
     value_format: "0.##%"
+    group_label: "Monthly Metrics"
   }
 
   measure: monthly_run_volume {
