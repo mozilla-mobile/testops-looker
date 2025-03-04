@@ -60,4 +60,12 @@ view: fenix_daily_android {
     value_format: "0.##%"
   }
 
+  measure: monthly_run_volume {
+    type: number
+    description: "Total number of test runs per month."
+    sql: SUM(${total_runs}) ;;
+    value_format: "#,##0"  # Formats as a whole number
+    group_label: "Monthly Metrics"
+  }
+
 }
