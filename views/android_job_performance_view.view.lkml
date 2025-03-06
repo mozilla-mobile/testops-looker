@@ -1,5 +1,5 @@
 view: android_job_performance_view {
-  sql_table_name: `moz-mobile-tools.testops_stats_android_job_performance_view` ;;
+  sql_table_name: `moz-mobile-tools.testops_stats.android_job_performance_view` ;;
 
   parameter: repository_name {
     type: string
