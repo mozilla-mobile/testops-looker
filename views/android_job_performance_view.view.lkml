@@ -7,12 +7,12 @@ view: android_job_performance_view {
         TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND) AS queued_seconds,
         TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND) AS run_seconds
       FROM
-        `moz-fx-treeherder-prod-c739.treeherder_prod.job` AS job
+        `moz-fx-data-shared-prod.treeherder_db.job` AS job
       JOIN
-        `moz-fx-treeherder-prod-c739.treeherder_prod.repository` AS repository
+        `moz-fx-data-shared-prod.treeherder_db.repository` AS repository
         ON job.repository_id = repository.id
       JOIN
-        `moz-fx-treeherder-prod-c739.treeherder_prod.job_type` AS job_type
+        `moz-fx-data-shared-prod.treeherder_db.job_type` AS job_type
         ON job.job_type_id = job_type.id
       WHERE
         job.result = 'success'
