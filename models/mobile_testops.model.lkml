@@ -62,5 +62,3 @@ explore: iriostestreleasestestedview {}
 explore: fenix_daily_android {}
 
 explore: focus_daily_android {}
-
-explore: android_job_performance_view {}
