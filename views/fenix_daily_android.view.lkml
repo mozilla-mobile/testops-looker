@@ -70,4 +70,13 @@ view: fenix_daily_android {
     group_label: "Monthly Metrics"
   }
 
+  measure: current_flaky_rate {
+    type: average
+    description: "Flaky rate over the last 30 days."
+    sql: SUM(${flaky_runs}) / SUM(${total_runs}) ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+    filters: [date_date: "this month"]
+  }
+
 }
