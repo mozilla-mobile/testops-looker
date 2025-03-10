@@ -114,4 +114,16 @@ view: fenix_daily_android {
     group_label: "Summary KPIs"
   }
 
+  measure: total_tests_percentage_change {
+    type: number
+    description: "Percentage change in test runs compared to last month."
+    sql:
+    CASE
+      WHEN ${total_tests_last_month} = 0 THEN NULL
+      ELSE ((${total_tests_this_month} - ${total_tests_last_month}) / ${total_tests_last_month}) * 100
+    END ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+  }
+
 }
