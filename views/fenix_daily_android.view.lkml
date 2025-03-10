@@ -120,7 +120,7 @@ view: fenix_daily_android {
     sql:
     CASE
       WHEN ${total_tests_last_month} = 0 THEN NULL
-      ELSE ((${total_tests_this_month} - ${total_tests_last_month}) / ${total_tests_last_month}) * 100
+      ELSE (( ${total_tests_this_month} - ${total_tests_last_month} ) / CAST(${total_tests_last_month} AS FLOAT)) * 100
     END ;;
     value_format: "0.##%"
     group_label: "Summary KPIs"
