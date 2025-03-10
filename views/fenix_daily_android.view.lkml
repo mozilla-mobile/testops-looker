@@ -126,4 +126,17 @@ view: fenix_daily_android {
     group_label: "Summary KPIs"
   }
 
+  measure: test_health_index {
+    type: number
+    description: "A health score based on flaky rate, failure rate, and run volume trends."
+    sql:
+    CASE
+      WHEN ${current_flaky_rate} >= 2 OR ${current_failure_rate} >= 2 OR ${total_tests_percentage_change} < -50 THEN -1 -- Unstable
+      WHEN ${current_flaky_rate} BETWEEN 1 AND 2 OR ${current_failure_rate} BETWEEN 1 AND 2 THEN 0 -- Monitor
+      ELSE 1 -- Stable
+    END ;;
+    value_format: "#"
+    group_label: "Summary KPIs"
+  }
+
 }
