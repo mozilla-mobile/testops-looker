@@ -79,4 +79,22 @@ view: fenix_daily_android {
     filters: [date_date: "this month"]
   }
 
+  measure: current_failure_rate {
+    type: average
+    description: "Failure rate for the current month."
+    sql: ${failed_runs} / ${total_runs} ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+    filters: [date_date: "this month"]
+  }
+
+  measure: total_tests_this_month {
+    type: sum
+    description: "Total number of test runs executed in the current month."
+    sql: ${total_runs} ;;
+    value_format: "#,##0"
+    group_label: "Summary KPIs"
+    filters: [date_date: "this month"]
+  }
+
 }
