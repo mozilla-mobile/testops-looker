@@ -139,4 +139,17 @@ view: fenix_daily_android {
     group_label: "Summary KPIs"
   }
 
+  measure: test_health_status {
+    type: string
+    description: "Overall test health status based on the health index."
+    sql:
+    CASE
+      WHEN ${test_health_index} = 1 THEN 'Stable'
+      WHEN ${test_health_index} = 0 THEN 'Monitor'
+      WHEN ${test_health_index} = -1 THEN 'Unstable'
+      ELSE 'N/A'
+    END ;;
+    group_label: "Summary KPIs"
+  }
+
 }
