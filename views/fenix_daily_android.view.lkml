@@ -97,4 +97,21 @@ view: fenix_daily_android {
     filters: [date_date: "this month"]
   }
 
+  measure: total_tests_last_month {
+    type: sum
+    description: "Total number of test runs executed in the previous month."
+    sql: ${total_runs} ;;
+    value_format: "#,##0"
+    group_label: "Summary KPIs"
+    filters: [date_date: "last month"]
+  }
+
+  measure: total_tests_change {
+    type: number
+    description: "Difference in total test runs between this month and last month."
+    sql: ${total_tests_this_month} - ${total_tests_last_month} ;;
+    value_format: "#,##0"
+    group_label: "Summary KPIs"
+  }
+
 }
