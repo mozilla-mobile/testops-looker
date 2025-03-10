@@ -71,7 +71,7 @@ view: fenix_daily_android {
   }
 
   measure: current_flaky_rate {
-    type: average
+    type: sum
     description: "Flaky rate over the last 30 days."
     sql: SUM(${flaky_runs}) / SUM(${total_runs}) ;;
     value_format: "0.##%"
