@@ -1,5 +1,6 @@
 view: android_job_performance_view {
     derived_table: {
+      datagroup_trigger: job_performance_refresh
       sql:
       SELECT
         job_type.name AS job_name,
