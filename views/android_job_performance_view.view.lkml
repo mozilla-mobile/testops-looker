@@ -16,10 +16,31 @@ view: android_job_performance_view {
         ON job.job_type_id = job_type.id
       WHERE
         job.result = 'success'
-        AND job.start_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)
+        AND job.start_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL CAST({% parameter time_interval %} AS INT64) DAY)
         AND repository.name = {% parameter repository_name %}
         AND job_type.name = {% parameter job_name %}
     ;;
+    }
+
+    parameter: time_interval {
+      type: string
+      label: "Time Interval"
+      default_value: "30"
+
+      allowed_value: {
+        label: "Past 7 Days"
+        value: "7"
+      }
+
+      allowed_value: {
+        label: "Past 30 Days"
+        value: "30"
+      }
+
+      allowed_value: {
+        label: "Past 90 Days"
+        value: "90"
+      }
     }
 
     parameter: repository_name {
