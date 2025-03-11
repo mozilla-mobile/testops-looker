@@ -22,11 +22,15 @@ view: android_job_performance_view {
     ;;
     }
 
-    # 📌 Parameter: Repository Name (Dropdown Filter)
     parameter: repository_name {
       type: string
       label: "Repository Name"
       default_value: "mozilla-central"
+
+      allowed_value: {
+        label: "Autoland"
+        value: "autoland"
+      }
 
       allowed_value: {
         label: "Mozilla Central"
@@ -39,7 +43,6 @@ view: android_job_performance_view {
       }
     }
 
-    # 📌 Parameter: Job Name (Dropdown Filter)
     parameter: job_name {
       type: string
       label: "Job Name"
@@ -51,45 +54,39 @@ view: android_job_performance_view {
       }
 
       allowed_value: {
-        label: "Fenix Release UI Test"
-        value: "ui-test-apk-fenix-arm-release"
+        label: "Focus Debug UI Test"
+        value: "ui-test-apk-focus-arm-debug"
       }
     }
 
-    # 📊 Job Name Dimension
     dimension: job_name_field {
       sql: ${TABLE}.job_name ;;
       type: string
     }
 
-    # 📊 Repository Name Dimension
     dimension: repository_name_field {
       sql: ${TABLE}.repository_name ;;
       type: string
     }
 
-    # 🔢 Measure: Average Queue Time
-    measure: avg_queue_time {
+    measure: avg_queue_time_minutes {
       type: average
-      sql: ${TABLE}.queued_seconds ;;
+      sql: ${TABLE}.queued_seconds / 60 ;;
       value_format_name: decimal_2
-      label: "Avg Queue Time (s)"
+      label: "Avg Queue Time (min)"
     }
 
-    # 🔢 Measure: Average Run Time
-    measure: avg_run_time {
+    measure: avg_run_time_minutes {
       type: average
-      sql: ${TABLE}.run_seconds ;;
+      sql: ${TABLE}.run_seconds / 60 ;;
       value_format_name: decimal_2
-      label: "Avg Run Time (s)"
+      label: "Avg Run Time (min)"
     }
 
-    # 🔍 Filter by Repository Name
     filter: repository_filter {
       sql: ${TABLE}.repository_name = {% parameter repository_name %} ;;
     }
 
-    # 🔍 Filter by Job Name
     filter: job_filter {
       sql: ${TABLE}.job_name = {% parameter job_name %} ;;
     }
