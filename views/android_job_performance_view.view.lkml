@@ -7,7 +7,7 @@ view: android_job_performance_view {
         job_type.name AS job_name,
         repository.name AS repository_name,
         AVG(TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND)) AS avg_queued_seconds,
-        AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)) AS avg_queued_seconds
+        AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)) AS avg_run_seconds
       FROM
         `moz-fx-data-shared-prod.treeherder_db.job` AS job
       JOIN
@@ -98,26 +98,26 @@ view: android_job_performance_view {
       type: string
     }
 
-    dimension: avg_queued_seconds {
+    dimension: avg_queue_time_seconds {
       type: number
       sql: ${TABLE}.avg_queued_seconds ;;
     }
 
-    dimension: avg_run_seconds {
+    dimension: avg_run_time_seconds {
       type: number
       sql: ${TABLE}.avg_run_seconds ;;
     }
 
     measure: avg_queue_time_minutes {
       type: average
-      sql: ${avg_queued_seconds} / 60 ;;
+      sql: ${avg_queue_time_seconds} / 60 ;;
       value_format_name: decimal_2
       label: "Avg Queue Time (min)"
     }
 
      measure: avg_run_time_minutes {
       type: average
-      sql: ${avg_run_seconds} / 60 ;;
+      sql: ${avg_run_time_seconds} / 60 ;;
       value_format_name: decimal_2
       label: "Avg Run Time (min)"
     }
