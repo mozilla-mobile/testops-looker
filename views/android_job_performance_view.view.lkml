@@ -117,7 +117,7 @@ view: android_job_performance_view {
       sql: AVG(${avg_queue_time_minutes}) OVER (
         PARTITION BY ${repository_name_field}, ${job_name_field}
         ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-     ) ;;
+      ) / 60 ;;
       value_format_name: decimal_2
       label: "7-Day Moving Avg Queue Time (min)"
     }
@@ -127,7 +127,7 @@ view: android_job_performance_view {
       sql: AVG(${avg_run_time_minutes}) OVER (
             PARTITION BY ${repository_name_field}, ${job_name_field}
             ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-         ) ;;
+      ) / 60 ;;
       value_format_name: decimal_2
       label: "7-Day Moving Avg Run Time (min)"
     }
