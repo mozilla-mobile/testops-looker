@@ -98,16 +98,16 @@ view: android_job_performance_view {
       type: string
     }
 
-    dimension: avg_queue_time_minutes {
-      type: number
-      sql: ${TABLE}.queued_seconds / 60 ;;
+    measure: avg_queue_time_minutes {
+      type: average
+      sql: ${TABLE}.avg_queued_seconds / 60 ;;
       value_format_name: decimal_2
       label: "Avg Queue Time (min)"
     }
 
-    dimension: avg_run_time_minutes {
-      type: number
-      sql: ${TABLE}.run_seconds / 60 ;;
+     measure: avg_run_time_minutes {
+      type: average
+      sql: ${TABLE}.avg_run_seconds / 60 ;;
       value_format_name: decimal_2
       label: "Avg Run Time (min)"
     }
@@ -117,7 +117,7 @@ view: android_job_performance_view {
       sql: AVG(${avg_queue_time_minutes}) OVER (
         PARTITION BY ${repository_name_field}, ${job_name_field}
         ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-      ) / 60 ;;
+      ) ;;
       value_format_name: decimal_2
       label: "7-Day Moving Avg Queue Time (min)"
     }
@@ -127,7 +127,7 @@ view: android_job_performance_view {
       sql: AVG(${avg_run_time_minutes}) OVER (
             PARTITION BY ${repository_name_field}, ${job_name_field}
             ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-      ) / 60 ;;
+      ) ;;
       value_format_name: decimal_2
       label: "7-Day Moving Avg Run Time (min)"
     }
