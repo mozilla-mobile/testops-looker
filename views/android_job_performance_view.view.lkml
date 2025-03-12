@@ -3,7 +3,7 @@ view: android_job_performance_view {
       datagroup_trigger: job_performance_refresh
       sql:
       SELECT
-        DATE_TRUNC(job.start_time, DAY) AS job_date
+        DATE_TRUNC(job.start_time, DAY) AS job_date,
         job_type.name AS job_name,
         repository.name AS repository_name,
         TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND) AS queued_seconds,
@@ -112,16 +112,22 @@ view: android_job_performance_view {
       label: "Avg Run Time (min)"
     }
 
-    measure: rolling_avg_queue_time {
-      type: average
-      sql: AVG(${avg_queue_time_minutes}) OVER (ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) ;;
+    dimension: rolling_avg_queue_time {
+      type: number
+      sql: AVG(${avg_queue_time_minutes}) OVER (
+              PARTITION BY ${repository_name_field}, ${job_name_field}
+              ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+           ) ;;
       value_format_name: decimal_2
       label: "7-Day Moving Avg Queue Time (min)"
     }
 
-    measure: rolling_avg_run_time {
-      type: average
-      sql: AVG(${avg_run_time_minutes}) OVER (ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) ;;
+    dimension: rolling_avg_run_time {
+      type: number
+      sql: AVG(${avg_run_time_minutes}) OVER (
+            PARTITION BY ${repository_name_field}, ${job_name_field}
+            ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+         ) ;;
       value_format_name: decimal_2
       label: "7-Day Moving Avg Run Time (min)"
     }
