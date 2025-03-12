@@ -3,6 +3,7 @@ view: android_job_performance_view {
       datagroup_trigger: job_performance_refresh
       sql:
       SELECT
+        DATE_TRUNC(job.start_time, DAY) AS job_date
         job_type.name AS job_name,
         repository.name AS repository_name,
         TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND) AS queued_seconds,
@@ -20,6 +21,7 @@ view: android_job_performance_view {
         AND job.start_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL CAST({% parameter time_interval %} AS INT64) DAY)
         AND repository.name = {% parameter repository_name %}
         AND job_type.name = {% parameter job_name %}
+      GROUP BY 1, 2, 3
     ;;
     }
 
@@ -81,6 +83,11 @@ view: android_job_performance_view {
       }
     }
 
+    dimension: job_date {
+      type: date
+      sql: DATE_TRUNC(${TABLE}.job_date, DAY) ;;
+    }
+
     dimension: job_name_field {
       sql: ${TABLE}.job_name ;;
       type: string
@@ -91,18 +98,32 @@ view: android_job_performance_view {
       type: string
     }
 
-    measure: avg_queue_time_minutes {
-      type: average
+    dimension: avg_queue_time_minutes {
+      type: number
       sql: ${TABLE}.queued_seconds / 60 ;;
       value_format_name: decimal_2
       label: "Avg Queue Time (min)"
     }
 
-    measure: avg_run_time_minutes {
-      type: average
+    dimension: avg_run_time_minutes {
+      type: number
       sql: ${TABLE}.run_seconds / 60 ;;
       value_format_name: decimal_2
       label: "Avg Run Time (min)"
+    }
+
+    measure: rolling_avg_queue_time {
+      type: average
+      sql: AVG(${avg_queue_time_minutes}) OVER (ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) ;;
+      value_format_name: decimal_2
+      label: "7-Day Moving Avg Queue Time (min)"
+    }
+
+    measure: rolling_avg_run_time {
+      type: average
+      sql: AVG(${avg_run_time_minutes}) OVER (ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) ;;
+      value_format_name: decimal_2
+      label: "7-Day Moving Avg Run Time (min)"
     }
 
     filter: repository_filter {
