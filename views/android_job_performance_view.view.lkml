@@ -21,7 +21,7 @@ view: android_job_performance_view {
         AND job.start_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL CAST({% parameter time_interval %} AS INT64) DAY)
         AND repository.name = {% parameter repository_name %}
         AND job_type.name = {% parameter job_name %}
-      GROUP BY 1, 2, 3
+      GROUP BY 1, 2, 3, 4, 5
     ;;
     }
 
