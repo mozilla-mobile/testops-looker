@@ -98,16 +98,26 @@ view: android_job_performance_view {
       type: string
     }
 
+    dimension: avg_queued_seconds {
+      type: number
+      sql: ${TABLE}.avg_queued_seconds ;;
+    }
+
+    dimension: avg_run_seconds {
+      type: number
+      sql: ${TABLE}.avg_run_seconds ;;
+    }
+
     measure: avg_queue_time_minutes {
       type: average
-      sql: ${TABLE}.avg_queued_seconds / 60 ;;
+      sql: ${avg_queued_seconds} / 60 ;;
       value_format_name: decimal_2
       label: "Avg Queue Time (min)"
     }
 
      measure: avg_run_time_minutes {
       type: average
-      sql: ${TABLE}.avg_run_seconds / 60 ;;
+      sql: ${avg_run_seconds} / 60 ;;
       value_format_name: decimal_2
       label: "Avg Run Time (min)"
     }
