@@ -6,8 +6,8 @@ view: android_job_performance_view {
         DATE_TRUNC(job.start_time, DAY) AS job_date,
         job_type.name AS job_name,
         repository.name AS repository_name,
-        TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND) AS queued_seconds,
-        TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND) AS run_seconds
+        AVG(TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND)) AS queued_seconds,
+        AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)) AS run_seconds
       FROM
         `moz-fx-data-shared-prod.treeherder_db.job` AS job
       JOIN
