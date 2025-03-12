@@ -112,17 +112,17 @@ view: android_job_performance_view {
       label: "Avg Run Time (min)"
     }
 
-    dimension: rolling_avg_queue_time {
+    measure: rolling_avg_queue_time {
       type: number
       sql: AVG(${avg_queue_time_minutes}) OVER (
-              PARTITION BY ${repository_name_field}, ${job_name_field}
-              ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-           ) ;;
+        PARTITION BY ${repository_name_field}, ${job_name_field}
+        ORDER BY ${job_date} ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+     ) ;;
       value_format_name: decimal_2
       label: "7-Day Moving Avg Queue Time (min)"
     }
 
-    dimension: rolling_avg_run_time {
+    measure: rolling_avg_run_time {
       type: number
       sql: AVG(${avg_run_time_minutes}) OVER (
             PARTITION BY ${repository_name_field}, ${job_name_field}
