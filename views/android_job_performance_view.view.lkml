@@ -2,55 +2,35 @@ view: android_job_performance_view {
   derived_table: {
     datagroup_trigger: job_performance_refresh
     sql:
-    WITH job_data AS (
       SELECT
-        DATE_TRUNC(job.start_time, DAY) AS job_date,
+        DATE_TRUNC(job.start_time, WEEK) AS week_start,
         job_type.name AS job_name,
         repository.name AS repository_name,
-        TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND) AS queued_seconds,
-        TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND) AS run_seconds
-      FROM `moz-fx-data-shared-prod.treeherder_db.job` AS job
-      JOIN `moz-fx-data-shared-prod.treeherder_db.repository` AS repository
+        AVG(TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND)) AS weekly_avg_queued_seconds,
+        AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)) AS weekly_avg_run_seconds,
+        AVG(AVG(TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND)))
+          OVER (PARTITION BY job_type.name, repository.name ORDER BY DATE_TRUNC(job.start_time, WEEK) ROWS BETWEEN 3 PRECEDING AND CURRENT ROW)
+          AS rolling_4_week_avg_queued_seconds,
+        AVG(AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)))
+          OVER (PARTITION BY job_type.name, repository.name ORDER BY DATE_TRUNC(job.start_time, WEEK) ROWS BETWEEN 3 PRECEDING AND CURRENT ROW)
+          AS rolling_4_week_avg_run_seconds
+      FROM
+        `moz-fx-data-shared-prod.treeherder_db.job` AS job
+      JOIN
+        `moz-fx-data-shared-prod.treeherder_db.repository` AS repository
         ON job.repository_id = repository.id
-      JOIN `moz-fx-data-shared-prod.treeherder_db.job_type` AS job_type
+      JOIN
+        `moz-fx-data-shared-prod.treeherder_db.job_type` AS job_type
         ON job.job_type_id = job_type.id
-      WHERE job.result = 'success'
-        AND job.start_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL CAST({% parameter time_interval %} AS INT64) DAY)
+      WHERE
+        job.result = 'success'
         AND repository.name = {% parameter repository_name %}
         AND job_type.name = {% parameter job_name %}
-    )
-    SELECT
-      job_date,
-      job_name,
-      repository_name,
-      AVG(queued_seconds) AS avg_queued_seconds,
-      AVG(run_seconds) AS avg_run_seconds,
-      -- Compute rolling averages within SQL
-      AVG(queued_seconds) OVER (
-        PARTITION BY repository_name, job_name
-        ORDER BY job_date
-        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-      ) / 60 AS rolling_avg_queue_time,
-      AVG(run_seconds) OVER (
-        PARTITION BY repository_name, job_name
-        ORDER BY job_date
-        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
-      ) / 60 AS rolling_avg_run_time
-    FROM job_data
-    GROUP BY job_date, job_name, repository_name
+      GROUP BY 1, 2, 3
     ;;
   }
 
-  parameter: time_interval {
-    type: string
-    label: "Time Interval"
-    default_value: "30"
-
-    allowed_value: { label: "Past 7 Days" value: "7" }
-    allowed_value: { label: "Past 30 Days" value: "30" }
-    allowed_value: { label: "Past 90 Days" value: "90" }
-  }
-
+  # 🏗️ Parameter: Repository Name (Dropdown Selection)
   parameter: repository_name {
     type: string
     label: "Repository Name"
@@ -59,8 +39,10 @@ view: android_job_performance_view {
     allowed_value: { label: "Autoland" value: "autoland" }
     allowed_value: { label: "Mozilla Central" value: "mozilla-central" }
     allowed_value: { label: "Mozilla Beta" value: "mozilla-beta" }
+    allowed_value: { label: "Mozilla Release" value: "mozilla-release" }
   }
 
+  # 🏗️ Parameter: Job Name (Dropdown Selection)
   parameter: job_name {
     type: string
     label: "Job Name"
@@ -70,9 +52,10 @@ view: android_job_performance_view {
     allowed_value: { label: "Focus Debug UI Test" value: "ui-test-apk-focus-arm-debug" }
   }
 
-  dimension: job_date {
+  # 📊 Dimensions
+  dimension: week_start {
     type: date
-    sql: ${TABLE}.job_date ;;
+    sql: ${TABLE}.week_start ;;
   }
 
   dimension: job_name_field {
@@ -85,48 +68,37 @@ view: android_job_performance_view {
     sql: ${TABLE}.repository_name ;;
   }
 
-  measure: avg_queue_time_seconds {
+  # 🔢 Measures: Weekly Averages (Converted to Minutes)
+  measure: weekly_avg_queue_time {
     type: average
-    sql: ${TABLE}.avg_queued_seconds ;;
+    sql: ${TABLE}.weekly_avg_queued_seconds / 60 ;;
     value_format_name: decimal_2
-    label: "Avg Queue Time (sec)"
+    label: "Weekly Avg Queue Time (min)"
   }
 
-  measure: avg_run_time_seconds {
+  measure: weekly_avg_run_time {
     type: average
-    sql: ${TABLE}.avg_run_seconds ;;
+    sql: ${TABLE}.weekly_avg_run_seconds / 60 ;;
     value_format_name: decimal_2
-    label: "Avg Run Time (sec)"
+    label: "Weekly Avg Run Time (min)"
   }
 
-  measure: avg_queue_time_minutes {
-    type: number
-    sql: ${avg_queue_time_seconds} / 60 ;;
+  # 🔢 Measures: Rolling 4-Week Averages (Converted to Minutes)
+  measure: rolling_avg_queue_time {
+    type: average
+    sql: ${TABLE}.rolling_4_week_avg_queued_seconds / 60 ;;
     value_format_name: decimal_2
-    label: "Avg Queue Time (min)"
+    label: "4-Week Moving Avg Queue Time (min)"
   }
 
-  measure: avg_run_time_minutes {
-    type: number
-    sql: ${avg_run_time_seconds} / 60 ;;
+  measure: rolling_avg_run_time {
+    type: average
+    sql: ${TABLE}.rolling_4_week_avg_run_seconds / 60 ;;
     value_format_name: decimal_2
-    label: "Avg Run Time (min)"
+    label: "4-Week Moving Avg Run Time (min)"
   }
 
-  dimension: rolling_avg_queue_time {
-    type: number
-    sql: ${TABLE}.rolling_avg_queue_time ;;
-    value_format_name: decimal_2
-    label: "7-Day Moving Avg Queue Time (min)"
-  }
-
-  dimension: rolling_avg_run_time {
-    type: number
-    sql: ${TABLE}.rolling_avg_run_time ;;
-    value_format_name: decimal_2
-    label: "7-Day Moving Avg Run Time (min)"
-  }
-
+  # 🎯 Filters for Looker Explore
   filter: repository_filter {
     sql: ${TABLE}.repository_name = {% parameter repository_name %} ;;
   }
