@@ -42,7 +42,7 @@ view: android_job_performance_view {
         ) AS rolling_4_week_avg_run_seconds
 
     FROM weekly_aggregates
-    WHERE week_start >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 WEEK)
+    WHERE DATE(week_start) >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 WEEK)
     ORDER BY week_start DESC;
         ;;
   }
