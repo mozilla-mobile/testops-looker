@@ -2,32 +2,48 @@ view: android_job_performance_view {
   derived_table: {
     datagroup_trigger: job_performance_refresh
     sql:
-      SELECT
-        DATE_TRUNC(job.start_time, WEEK) AS week_start,
-        job_type.name AS job_name,
-        repository.name AS repository_name,
-        AVG(TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND)) AS weekly_avg_queued_seconds,
-        AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)) AS weekly_avg_run_seconds,
-        AVG(AVG(TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND)))
-          OVER (PARTITION BY job_type.name, repository.name ORDER BY DATE_TRUNC(job.start_time, WEEK) ROWS BETWEEN 3 PRECEDING AND CURRENT ROW)
-          AS rolling_4_week_avg_queued_seconds,
-        AVG(AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)))
-          OVER (PARTITION BY job_type.name, repository.name ORDER BY DATE_TRUNC(job.start_time, WEEK) ROWS BETWEEN 3 PRECEDING AND CURRENT ROW)
-          AS rolling_4_week_avg_run_seconds
-      FROM
-        `moz-fx-data-shared-prod.treeherder_db.job` AS job
-      JOIN
-        `moz-fx-data-shared-prod.treeherder_db.repository` AS repository
-        ON job.repository_id = repository.id
-      JOIN
-        `moz-fx-data-shared-prod.treeherder_db.job_type` AS job_type
-        ON job.job_type_id = job_type.id
-      WHERE
-        job.result = 'success'
-        AND repository.name = {% parameter repository_name %}
-        AND job_type.name = {% parameter job_name %}
-      GROUP BY 1, 2, 3
-    ;;
+      WITH weekly_aggregates AS (
+        SELECT
+            DATE_TRUNC(job.start_time, WEEK) AS week_start,
+            job_type.name AS job_name,
+            repository.name AS repository_name,
+            AVG(TIMESTAMP_DIFF(job.start_time, job.submit_time, SECOND)) AS weekly_avg_queued_seconds,
+            AVG(TIMESTAMP_DIFF(job.end_time, job.start_time, SECOND)) AS weekly_avg_run_seconds
+        FROM
+            `moz-fx-data-shared-prod.treeherder_db.job` AS job
+        JOIN
+            `moz-fx-data-shared-prod.treeherder_db.repository` AS repository
+            ON job.repository_id = repository.id
+        JOIN
+            `moz-fx-data-shared-prod.treeherder_db.job_type` AS job_type
+            ON job.job_type_id = job_type.id
+        WHERE
+            job.result = 'success'
+            AND job.start_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)  -- Default to past 90 days
+            AND repository.name = {% parameter repository_name %}
+            AND job_type.name = {% parameter job_name %}
+        GROUP BY
+            week_start, job_name, repository_name
+    )
+
+    SELECT
+        *,
+        -- 4-week Rolling Average Calculation
+        AVG(weekly_avg_queued_seconds) OVER (
+            PARTITION BY repository_name, job_name
+            ORDER BY week_start
+            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
+        ) AS rolling_4_week_avg_queued,
+
+        AVG(weekly_avg_run_seconds) OVER (
+            PARTITION BY repository_name, job_name
+            ORDER BY week_start
+            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
+        ) AS rolling_4_week_avg_run
+
+    FROM weekly_aggregates
+    ORDER BY week_start DESC;
+        ;;
   }
 
   # 🏗️ Parameter: Repository Name (Dropdown Selection)
