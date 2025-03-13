@@ -33,13 +33,13 @@ view: android_job_performance_view {
             PARTITION BY repository_name, job_name
             ORDER BY week_start
             ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
-        ) AS rolling_4_week_avg_queued,
+        ) AS rolling_4_week_avg_queued_seconds,
 
         AVG(weekly_avg_run_seconds) OVER (
             PARTITION BY repository_name, job_name
             ORDER BY week_start
             ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
-        ) AS rolling_4_week_avg_run
+        ) AS rolling_4_week_avg_run_seconds
 
     FROM weekly_aggregates
     ORDER BY week_start DESC;
@@ -84,14 +84,18 @@ view: android_job_performance_view {
     sql: ${TABLE}.repository_name ;;
   }
 
-  dimension: rolling_4_week_avg_queued_seconds {
-    type: number
-    sql: ${TABLE}.rolling_4_week_avg_queued ;;
+  measure: rolling_avg_queue_time {
+    type: average
+    sql: ${TABLE}.rolling_4_week_avg_queued_seconds / 60 ;;
+    value_format_name: decimal_2
+    label: "4-Week Moving Avg Queue Time (min)"
   }
 
-  dimension: rolling_4_week_avg_run_seconds {
-    type: number
-    sql: ${TABLE}.rolling_4_week_avg_run ;;
+  measure: rolling_avg_run_time {
+    type: average
+    sql: ${TABLE}.rolling_4_week_avg_run_seconds / 60 ;;
+    value_format_name: decimal_2
+    label: "4-Week Moving Avg Run Time (min)"
   }
 
   # 🔢 Measures: Weekly Averages (Converted to Minutes)
@@ -107,21 +111,6 @@ view: android_job_performance_view {
     sql: ${TABLE}.weekly_avg_run_seconds / 60 ;;
     value_format_name: decimal_2
     label: "Weekly Avg Run Time (min)"
-  }
-
-  # 🔢 Measures: Rolling 4-Week Averages (Converted to Minutes)
-  measure: rolling_avg_queue_time {
-    type: number
-    sql: ${rolling_4_week_avg_queued_seconds} / 60 ;;
-    value_format_name: decimal_2
-    label: "4-Week Moving Avg Queue Time (min)"
-  }
-
-  measure: rolling_avg_run_time {
-    type: number
-    sql: ${rolling_4_week_avg_run_seconds} / 60 ;;
-    value_format_name: decimal_2
-    label: "4-Week Moving Avg Run Time (min)"
   }
 
   # 🎯 Filters for Looker Explore
