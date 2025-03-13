@@ -84,6 +84,16 @@ view: android_job_performance_view {
     sql: ${TABLE}.repository_name ;;
   }
 
+  dimension: rolling_4_week_avg_queued_seconds {
+    type: number
+    sql: ${TABLE}.rolling_4_week_avg_queued ;;
+  }
+
+  dimension: rolling_4_week_avg_run_seconds {
+    type: number
+    sql: ${TABLE}.rolling_4_week_avg_run ;;
+  }
+
   # 🔢 Measures: Weekly Averages (Converted to Minutes)
   measure: weekly_avg_queue_time {
     type: number
@@ -102,14 +112,14 @@ view: android_job_performance_view {
   # 🔢 Measures: Rolling 4-Week Averages (Converted to Minutes)
   measure: rolling_avg_queue_time {
     type: number
-    sql: ${TABLE}.rolling_4_week_avg_queued / 60 ;;
+    sql: ${rolling_4_week_avg_queued_seconds} / 60 ;;
     value_format_name: decimal_2
     label: "4-Week Moving Avg Queue Time (min)"
   }
 
   measure: rolling_avg_run_time {
     type: number
-    sql: ${TABLE}.rolling_4_week_avg_run / 60 ;;
+    sql: ${rolling_4_week_avg_run_seconds} / 60 ;;
     value_format_name: decimal_2
     label: "4-Week Moving Avg Run Time (min)"
   }
