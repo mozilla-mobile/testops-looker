@@ -19,7 +19,7 @@ view: android_job_performance_view {
             ON job.job_type_id = job_type.id
         WHERE
             job.result = 'success'
-            AND job.start_time >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)  -- Default to past 90 days
+            AND TIMESTAMP(job.start_time) >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
             AND repository.name = {% parameter repository_name %}
             AND job_type.name = {% parameter job_name %}
         GROUP BY
@@ -42,7 +42,7 @@ view: android_job_performance_view {
         ) AS rolling_4_week_avg_run_seconds
 
     FROM weekly_aggregates
-    WHERE week_start >= TIMESTAMP_SUB(CURRENT_DATE(), INTERVAL 5 WEEK)  -- Only keep the last 5 weeks
+    WHERE week_start >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 WEEK)
     ORDER BY week_start DESC;
         ;;
   }
