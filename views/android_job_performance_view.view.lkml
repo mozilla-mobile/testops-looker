@@ -2,7 +2,7 @@ view: android_job_performance_view {
   derived_table: {
     datagroup_trigger: job_performance_refresh
     sql:
-      WITH weekly_aggregates AS (
+    WITH weekly_aggregates AS (
         SELECT
             DATE_TRUNC(job.start_time, WEEK) AS week_start,
             job_type.name AS job_name,
@@ -27,7 +27,12 @@ view: android_job_performance_view {
     )
 
     SELECT
-        *,
+        week_start,
+        job_name,
+        repository_name,
+        weekly_avg_queued_seconds,
+        weekly_avg_run_seconds,
+
         -- 4-week Rolling Average Calculation
         AVG(weekly_avg_queued_seconds) OVER (
             PARTITION BY repository_name, job_name
