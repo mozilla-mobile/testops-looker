@@ -98,17 +98,16 @@ view: android_job_performance_view {
     label: "4-Week Moving Avg Run Time (min)"
   }
 
-  # 🔢 Measures: Weekly Averages (Converted to Minutes)
   measure: weekly_avg_queue_time {
-    type: number
-    sql: ${TABLE}.weekly_avg_queued_seconds / 60 ;;
+    type: average
+    sql: AVG(${TABLE}.weekly_avg_queued_seconds) / 60 ;;
     value_format_name: decimal_2
     label: "Weekly Avg Queue Time (min)"
   }
 
   measure: weekly_avg_run_time {
-    type: number
-    sql: ${TABLE}.weekly_avg_run_seconds / 60 ;;
+    type: average
+    sql: AVG(${TABLE}.weekly_avg_run_seconds) / 60 ;;
     value_format_name: decimal_2
     label: "Weekly Avg Run Time (min)"
   }
