@@ -47,7 +47,6 @@ view: android_job_performance_view {
         ;;
   }
 
-  # 🏗️ Parameter: Repository Name (Dropdown Selection)
   parameter: repository_name {
     type: string
     label: "Repository Name"
@@ -59,7 +58,6 @@ view: android_job_performance_view {
     allowed_value: { label: "Mozilla Release" value: "mozilla-release" }
   }
 
-  # 🏗️ Parameter: Job Name (Dropdown Selection)
   parameter: job_name {
     type: string
     label: "Job Name"
@@ -67,9 +65,10 @@ view: android_job_performance_view {
 
     allowed_value: { label: "Fenix Debug UI Test" value: "ui-test-apk-fenix-arm-debug" }
     allowed_value: { label: "Focus Debug UI Test" value: "ui-test-apk-focus-arm-debug" }
+    allowed_value: { label: "Fenix Build APK" value: "build-apk-fenix-debug" }
+    allowed_value: { label: "Focus Build APK" value: "build-apk-focus-debug" }
   }
 
-  # 📊 Dimensions
   dimension: week_start {
     type: date
     sql: ${TABLE}.week_start ;;
@@ -101,19 +100,18 @@ view: android_job_performance_view {
 
   measure: weekly_avg_queue_time {
     type: average
-    sql: AVG(${TABLE}.weekly_avg_queued_seconds) / 60 ;;
+    sql: ${TABLE}.weekly_avg_queued_seconds / 60 ;;
     value_format_name: decimal_2
     label: "Weekly Avg Queue Time (min)"
   }
 
   measure: weekly_avg_run_time {
     type: average
-    sql: AVG(${TABLE}.weekly_avg_run_seconds) / 60 ;;
+    sql: ${TABLE}.weekly_avg_run_seconds / 60 ;;
     value_format_name: decimal_2
     label: "Weekly Avg Run Time (min)"
   }
 
-  # 🎯 Filters for Looker Explore
   filter: repository_filter {
     sql: ${TABLE}.repository_name = {% parameter repository_name %} ;;
   }
