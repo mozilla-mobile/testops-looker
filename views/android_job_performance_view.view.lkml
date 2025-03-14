@@ -112,6 +112,23 @@ view: android_job_performance_view {
     label: "Weekly Avg Run Time (min)"
   }
 
+  measure: previous_4_week_avg_run_time {
+    type: number
+    sql: LAG(${rolling_avg_run_time}) OVER (
+      PARTITION BY ${repository_name_field}, ${job_name_field}
+      ORDER BY ${week_start}
+    ) ;;
+    value_format_name: decimal_2
+    label: "Previous 4-Week Moving Avg Run Time (min)"
+  }
+
+  measure: change_in_4_week_avg_run_time {
+    type: number
+    sql: ((${rolling_avg_run_time} - ${previous_4_week_avg_run_time}) / ${previous_4_week_avg_run_time}) * 100 ;;
+    value_format_name: percent_2
+    label: "4-Week Run Time Change (%)"
+  }
+
   filter: repository_filter {
     sql: ${TABLE}.repository_name = {% parameter repository_name %} ;;
   }
