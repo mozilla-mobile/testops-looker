@@ -9,3 +9,5 @@ datagroup: job_performance_refresh {
 }
 
 explore: android_job_performance_view {}
+
+explore: android_job_durations {}
