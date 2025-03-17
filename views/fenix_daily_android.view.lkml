@@ -157,8 +157,8 @@ view: fenix_daily_android {
     description: "Weekly flaky rate calculated as total flaky runs divided by total test runs."
     sql:
     CASE
-      WHEN EXTRACT(WEEK FROM ${date_date}) = EXTRACT(WEEK FROM CURRENT_DATE())
-      THEN SUM(${flaky_runs}) / SUM(${total_runs})
+      WHEN EXTRACT(WEEK FROM ${date_date}) <= EXTRACT(WEEK FROM CURRENT_DATE())  -- Allow all past weeks
+      THEN COALESCE(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0), 0)
       ELSE NULL
     END ;;
     value_format: "0.##%"
@@ -169,11 +169,11 @@ view: fenix_daily_android {
     type: number
     description: "Flaky rate for the previous week."
     sql:
-      CASE
-        WHEN EXTRACT(WEEK FROM ${date_date}) = EXTRACT(WEEK FROM DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))
-        THEN SUM(${flaky_runs}) / SUM(${total_runs})
-        ELSE NULL
-      END ;;
+    CASE
+      WHEN EXTRACT(WEEK FROM ${date_date}) = EXTRACT(WEEK FROM DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY))
+      THEN COALESCE(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0), 0)
+      ELSE NULL
+    END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
@@ -183,7 +183,7 @@ view: fenix_daily_android {
     description: "Percentage change in flaky rate compared to last week."
     sql:
     CASE
-      WHEN ${last_week_flaky_rate} IS NULL OR ${last_week_flaky_rate} = 0 THEN NULL
+      WHEN ${last_week_flaky_rate} IS NULL OR ${last_week_flaky_rate} = 0 THEN 0
       ELSE ((${weekly_flaky_rate} - ${last_week_flaky_rate}) / ${last_week_flaky_rate}) * 100
     END ;;
     value_format: "0.##%"
