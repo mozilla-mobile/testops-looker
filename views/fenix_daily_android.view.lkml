@@ -163,18 +163,15 @@ view: fenix_daily_android {
 
  measure: last_week_flaky_rate {
   type: number
-  description: "Flaky rate for the previous week (Monday-Sunday)."
+  description: "Flaky rate for the previous week."
   sql:
-      SUM(CASE
-            WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
-            THEN ${flaky_runs}
-            ELSE 0
-          END)
-      / NULLIF(SUM(CASE
-                     WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
-                     THEN ${total_runs}
-                     ELSE 0
-                   END), 0) ;;
+    MAX(
+      CASE
+        WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
+        THEN SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0)
+        ELSE NULL
+      END
+    ) ;;
   value_format: "0.##%"
   group_label: "Weekly Metrics"
  }
