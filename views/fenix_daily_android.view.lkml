@@ -163,6 +163,7 @@ view: fenix_daily_android {
     END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
+    drill_fields: [date_week]
   }
 
   measure: last_week_flaky_rate {
@@ -176,6 +177,7 @@ view: fenix_daily_android {
     END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
+    drill_fields: [date_week]
   }
 
   measure: flaky_rate_weekly_change {
@@ -188,6 +190,7 @@ view: fenix_daily_android {
     END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
+    drill_fields: [date_week]
   }
 
 }
