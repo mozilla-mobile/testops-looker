@@ -165,14 +165,22 @@ view: fenix_daily_android {
   type: number
   description: "Flaky rate for the previous week."
   sql:
-    MAX(
+    SUM(
       CASE
         WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
-        THEN SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0)
-        ELSE NULL
+        THEN ${flaky_runs}
+        ELSE 0
       END
+    ) / NULLIF(
+      SUM(
+        CASE
+          WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
+          THEN ${total_runs}
+          ELSE 0
+        END
+      ), 0
     ) ;;
   value_format: "0.##%"
   group_label: "Weekly Metrics"
- }
+}
 }
