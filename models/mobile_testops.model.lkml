@@ -60,3 +60,5 @@ explore: iosinsightsdummy {}
 explore: iriostestreleasestestedview {}
 
 explore: fennec_test_results_ios {}
+
+explore: ios_longest_test_executions {}
