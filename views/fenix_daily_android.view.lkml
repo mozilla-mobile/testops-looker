@@ -154,40 +154,10 @@ view: fenix_daily_android {
 
   measure: weekly_flaky_rate {
     type: number
-    description: "Weekly flaky rate calculated as total flaky runs divided by total test runs."
+    description: "Flaky rate for the current week (Monday-Sunday)."
     sql:
-        CASE
-          WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(CURRENT_DATE(), WEEK(MONDAY))
-          THEN COALESCE(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0), 0)
-          ELSE NULL
-        END ;;
+        SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0) ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
-
-  measure: last_week_flaky_rate {
-    type: number
-    description: "Flaky rate for the previous week."
-    sql:
-        CASE
-          WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
-          THEN COALESCE(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0), 0)
-          ELSE NULL
-        END ;;
-    value_format: "0.##%"
-    group_label: "Weekly Metrics"
-  }
-
-  measure: flaky_rate_weekly_change {
-    type: number
-    description: "Percentage change in flaky rate compared to last week."
-    sql:
-    CASE
-      WHEN ${last_week_flaky_rate} IS NULL OR ${last_week_flaky_rate} = 0 THEN 0
-      ELSE ((${weekly_flaky_rate} - ${last_week_flaky_rate}) / ${last_week_flaky_rate}) * 100
-    END ;;
-    value_format: "0.##%"
-    group_label: "Weekly Metrics"
-  }
-
 }
