@@ -157,21 +157,21 @@ view: fenix_daily_android {
     description: "Weekly flaky rate calculated as total flaky runs divided by total test runs."
     sql:
       CASE
-        WHEN ${date_week} = DATE_TRUNC(CURRENT_DATE(), WEEK(MONDAY))
-        THEN SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0)
+        WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(CURRENT_DATE(), WEEK(MONDAY))
+        THEN COALESCE(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0), 0)
         ELSE NULL
       END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
 
-  measure: last_week_flaky_rate {
+   measure: last_week_flaky_rate {
     type: number
     description: "Flaky rate for the previous week."
     sql:
       CASE
-        WHEN ${date_week} = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
-        THEN SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0)
+        WHEN DATE_TRUNC(${date_date}, WEEK(MONDAY)) = DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), WEEK(MONDAY))
+        THEN COALESCE(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0), 0)
         ELSE NULL
       END ;;
     value_format: "0.##%"
