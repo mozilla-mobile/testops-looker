@@ -172,5 +172,6 @@ view: fenix_daily_android {
         END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
+    drill_fields: [date_date]
   }
 }
