@@ -165,7 +165,8 @@ view: fenix_daily_android {
     type: number
     description: "Flaky rate for the previous week."
     sql:
-    LAG(${weekly_flaky_rate}) OVER (PARTITION BY 1 ORDER BY ${date_week} DESC) ;;
+        LAG(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0))
+        OVER (ORDER BY ${date_week} ASC) ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
@@ -174,10 +175,11 @@ view: fenix_daily_android {
     type: number
     description: "Percentage change in flaky rate compared to last week."
     sql:
-      CASE
-        WHEN ${last_week_flaky_rate} IS NULL OR ${last_week_flaky_rate} = 0 THEN NULL
-        ELSE (( ${weekly_flaky_rate} - ${last_week_flaky_rate} ) / NULLIF(${last_week_flaky_rate}, 0)) * 100
-      END ;;
+        CASE
+          WHEN COALESCE(${last_week_flaky_rate}, 0) = 0 THEN NULL
+          ELSE ((COALESCE(${weekly_flaky_rate}, 0) - COALESCE(${last_week_flaky_rate}, 0))
+                / NULLIF(COALESCE(${last_week_flaky_rate}, 0), 0)) * 100
+        END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
