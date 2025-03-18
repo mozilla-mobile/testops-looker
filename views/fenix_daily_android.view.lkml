@@ -165,7 +165,7 @@ view: fenix_daily_android {
     type: number
     description: "Flaky rate for the previous week."
     sql:
-      LAG(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0)) OVER (ORDER BY ${date_week} DESC) ;;
+      LAG(SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0)) OVER (PARTITION BY 1 ORDER BY ${date_week} DESC) ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
