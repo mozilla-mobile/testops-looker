@@ -189,8 +189,7 @@ view: fenix_daily_android {
     description: "Percentage change in flaky rate compared to last week."
     sql:
     CASE
-      WHEN ${last_week_flaky_rate} IS NULL THEN NULL
-      WHEN ${last_week_flaky_rate} = 0 THEN NULL
+      WHEN ${last_week_flaky_rate} IS NULL OR ${last_week_flaky_rate} = 0 THEN NULL
       ELSE (( ${weekly_flaky_rate} - ${last_week_flaky_rate} ) / ${last_week_flaky_rate}) * 100
     END ;;
     value_format: "0.##%"
