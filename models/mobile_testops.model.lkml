@@ -59,6 +59,12 @@ explore: iosinsightsdummy {}
 
 explore: iriostestreleasestestedview {}
 
+explore: fennec_test_results_ios {}
+
+explore: ios_longest_test_executions {}
+
+explore: report_jira_softvision_worklogs_staging {}
+
 explore: fenix_daily_android {}
 
 explore: focus_daily_android {}
