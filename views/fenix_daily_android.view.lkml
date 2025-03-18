@@ -190,7 +190,7 @@ view: fenix_daily_android {
     sql:
     CASE
       WHEN ${last_week_flaky_rate} IS NULL OR ${last_week_flaky_rate} = 0 THEN NULL
-      ELSE (( ${weekly_flaky_rate} - ${last_week_flaky_rate} ) / ${last_week_flaky_rate}) * 100
+      ELSE (( ${weekly_flaky_rate} - ${last_week_flaky_rate} ) / NULLIF(${last_week_flaky_rate}, 0)) * 100
     END ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
