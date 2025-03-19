@@ -70,3 +70,5 @@ explore: fenix_daily_android {}
 explore: focus_daily_android {}
 
 explore: ios_flaky_tests_daily {}
+
+explore: ios_flaky_tests_daily_row_per_flay_test_name {}
