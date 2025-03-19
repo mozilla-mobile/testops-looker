@@ -68,3 +68,5 @@ explore: report_jira_softvision_worklogs_staging {}
 explore: fenix_daily_android {}
 
 explore: focus_daily_android {}
+
+explore: ios_flaky_tests_daily {}
