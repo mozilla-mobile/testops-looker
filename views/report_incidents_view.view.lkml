@@ -1,41 +1,42 @@
 view: report_incidents_view {
   sql_table_name: `moz-mobile-tools.testops_dashboard.report_incidents_view` ;;
 
-  dimension: string_field_0 {
+  dimension: comment {
     type: string
-    sql: ${TABLE}.string_field_0 ;;
+    sql: ${TABLE}.comment ;;
   }
-  dimension: string_field_1 {
+  dimension: incident_link {
     type: string
-    sql: ${TABLE}.string_field_1 ;;
+    sql: ${TABLE}.incident_link ;;
   }
-  dimension: string_field_2 {
+  dimension: platform {
     type: string
-    sql: ${TABLE}.string_field_2 ;;
+    sql: ${TABLE}.platform ;;
   }
-  dimension: string_field_3 {
-    type: string
-    sql: ${TABLE}.string_field_3 ;;
+  dimension_group: reported {
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.reported_date ;;
   }
-  dimension: string_field_4 {
+  dimension: severity {
     type: string
-    sql: ${TABLE}.string_field_4 ;;
+    sql: ${TABLE}.severity ;;
   }
-  dimension: string_field_5 {
+  dimension: status {
     type: string
-    sql: ${TABLE}.string_field_5 ;;
+    sql: ${TABLE}.status ;;
   }
-  dimension: string_field_6 {
+  dimension: submitted {
     type: string
-    sql: ${TABLE}.string_field_6 ;;
+    sql: ${TABLE}.submitted ;;
   }
-  dimension: string_field_7 {
+  dimension: summary {
     type: string
-    sql: ${TABLE}.string_field_7 ;;
+    sql: ${TABLE}.summary ;;
   }
-  dimension: string_field_8 {
+  dimension: updated_date {
     type: string
-    sql: ${TABLE}.string_field_8 ;;
+    sql: ${TABLE}.updated_date ;;
   }
   measure: count {
     type: count
