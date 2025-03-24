@@ -41,6 +41,7 @@ view: android_job_durations {
     default_value: "ui-test-apk"
     allowed_value: { value: "ui-test-apk" label: "UI Test APK" }
     allowed_value: { value: "build-apk" label: "Build APK" }
+    allowed_value: { value: "test-apk" label: "Unit Test APK" }
   }
 
   dimension: date {

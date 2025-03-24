@@ -67,6 +67,8 @@ view: android_job_performance_view {
     allowed_value: { label: "Focus Debug UI Test" value: "ui-test-apk-focus-arm-debug" }
     allowed_value: { label: "Fenix Build APK" value: "build-apk-fenix-debug" }
     allowed_value: { label: "Focus Build APK" value: "build-apk-focus-debug" }
+    allowed_value: { label: "Fenix Debug Unit Test" value: "test-apk-fenix-debug" }
+    allowed_value: { label: "Focus Debug Unit Test" value: "test-apk-focus-debug" }
   }
 
   dimension: week_start {
