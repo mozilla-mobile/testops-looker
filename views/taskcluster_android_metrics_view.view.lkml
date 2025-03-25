@@ -52,7 +52,7 @@ view: taskcluster_android_metrics_view {
   }
 
   measure: completed {
-    type: number
+    type: sum
     sql: ${TABLE}.completed ;;
   }
 
@@ -63,7 +63,7 @@ view: taskcluster_android_metrics_view {
   }
 
   measure: failed {
-    type: number
+    type: sum
     sql: ${TABLE}.failed ;;
   }
 
@@ -74,7 +74,7 @@ view: taskcluster_android_metrics_view {
   }
 
   measure: deadline {
-    type: number
+    type: sum
     sql: ${TABLE}.deadline ;;
   }
 
