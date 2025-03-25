@@ -13,7 +13,7 @@ view: report_incidents_view {
     type: string
     sql: ${TABLE}.platform ;;
   }
-  dimension_group: reported {
+  dimension_group: reported_date {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.reported_date ;;
