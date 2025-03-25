@@ -47,7 +47,7 @@ view: taskcluster_android_metrics_view {
   }
 
   measure: count {
-    type: number
+    type: sum
     sql: ${TABLE}.count ;;
   }
 
@@ -57,7 +57,7 @@ view: taskcluster_android_metrics_view {
   }
 
   measure: complete_ratio {
-    type: number
+    type: average
     sql: ${TABLE}.complete_ratio ;;
     value_format_name: percent_2
   }
@@ -68,7 +68,7 @@ view: taskcluster_android_metrics_view {
   }
 
   measure: failed_ratio {
-    type: number
+    type: average
     sql: ${TABLE}.failed_ratio ;;
     value_format_name: percent_2
   }
@@ -78,11 +78,11 @@ view: taskcluster_android_metrics_view {
     sql: ${TABLE}.deadline ;;
   }
 
-  measure: lag_p50 { type: number sql: ${TABLE}.lag_p50 ;; }
-  measure: lag_p75 { type: number sql: ${TABLE}.lag_p75 ;; }
-  measure: lag_p99 { type: number sql: ${TABLE}.lag_p99 ;; }
+  measure: lag_p50 { type: average sql: ${TABLE}.lag_p50 ;; }
+  measure: lag_p75 { type: average sql: ${TABLE}.lag_p75 ;; }
+  measure: lag_p99 { type: average sql: ${TABLE}.lag_p99 ;; }
 
-  measure: execution_p50 { type: number sql: ${TABLE}.execution_p50 ;; }
-  measure: execution_p75 { type: number sql: ${TABLE}.execution_p75 ;; }
-  measure: execution_p99 { type: number sql: ${TABLE}.execution_p99 ;; }
+  measure: execution_p50 { type: average sql: ${TABLE}.execution_p50 ;; }
+  measure: execution_p75 { type: average sql: ${TABLE}.execution_p75 ;; }
+  measure: execution_p99 { type: average sql: ${TABLE}.execution_p99 ;; }
 }
