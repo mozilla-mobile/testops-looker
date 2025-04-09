@@ -22,7 +22,7 @@ view: taskcluster_android_metrics_view {
           UNNEST(tags) AS t
         WHERE
           t.key = "label"
-          AND REGEXP_CONTAINS(t.value, r"ui-test-apk|android-startup-test")
+          AND REGEXP_CONTAINS(t.value, r"ui-test-apk|android-startup-test|test-apk")
           AND A.created > TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)
         GROUP BY label
       )
