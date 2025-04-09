@@ -74,3 +74,9 @@ explore: ios_flaky_tests_daily {}
 explore: ios_flaky_tests_daily_row_per_flay_test_name {}
 
 explore: report_incidents_view {}
+
+explore: report_bitrise_builds_staging {}
+
+explore: report_jira_softvision_worklogs {}
+
+explore: report_jira_softvision_worklogs_total_per_month {}
