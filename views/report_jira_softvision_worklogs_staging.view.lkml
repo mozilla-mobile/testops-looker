@@ -40,4 +40,12 @@ view: report_jira_softvision_worklogs_staging {
     type: count
     drill_fields: [id]
   }
+  dimension: parent_name {
+    type: string
+    sql: ${TABLE}.parent_name ;;
+  }
+  dimension: child_name {
+    type: string
+    sql: ${TABLE}.child_name ;;
+  }
 }
