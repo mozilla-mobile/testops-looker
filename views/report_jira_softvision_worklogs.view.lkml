@@ -36,6 +36,14 @@ view: report_jira_softvision_worklogs {
     type: number
     sql: ${TABLE}.time_spent_seconds ;;
   }
+  dimension: parent_name {
+    type: string
+    sql: ${TABLE}.parent_name ;;
+  }
+  dimension: child_name {
+    type: string
+    sql: ${TABLE}.child_name ;;
+  }
   measure: count {
     type: count
     drill_fields: [id]
