@@ -162,11 +162,11 @@ view: fenix_daily_android {
     description: "A health score based on flaky rate, failure rate, and run volume trends. Volume drop is only considered after the third week of the month."
     sql:
     CASE
-      WHEN ${current_flaky_rate} >= 0.02
-           OR ${current_failure_rate} >= 0.02
+      WHEN ${current_flaky_rate_weighted} >= 0.02
+           OR ${current_failure_rate_weighted} >= 0.02
            OR (EXTRACT(DAY FROM CURRENT_DATE()) >= 21 AND ${total_tests_percentage_change} < -0.5) THEN -1 -- Unstable
-      WHEN ${current_flaky_rate} BETWEEN 0.01 AND 0.02
-           OR ${current_failure_rate} BETWEEN 0.01 AND 0.02 THEN 0 -- Monitor
+      WHEN ${current_flaky_rate_weighted} BETWEEN 0.01 AND 0.02
+           OR ${current_failure_rate_weighted} BETWEEN 0.01 AND 0.02 THEN 0 -- Monitor
       ELSE 1 -- Stable
     END ;;
     value_format: "#"
