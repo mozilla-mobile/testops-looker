@@ -44,7 +44,7 @@ view: focus_daily_android {
   measure: monthly_failure_rate {
     type: number
     description: "Monthly failure rate calculated as total failed runs divided by total test runs."
-    sql: SUM(${failed_runs}) / SUM(${total_runs}) ;;
+    sql: SAFE_DIVIDE(SUM(${failed_runs}), NULLIF(SUM(${total_runs}), 0)) ;;
     value_format: "0.##%"
     group_label: "Monthly Metrics"
   }
@@ -52,7 +52,7 @@ view: focus_daily_android {
   measure: monthly_flaky_rate {
     type: number
     description: "Monthly flaky rate calculated as total flaky runs divided by total test runs."
-    sql: SUM(${flaky_runs}) / SUM(${total_runs}) ;;
+    sql: SAFE_DIVIDE(SUM(${flaky_runs}), NULLIF(SUM(${total_runs}), 0)) ;;
     value_format: "0.##%"
     group_label: "Monthly Metrics"
   }
@@ -151,7 +151,7 @@ view: focus_daily_android {
     type: number
     description: "Flaky rate for the current week (Monday-Sunday)."
     sql:
-        SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0) ;;
+        SAFE_DIVIDE(SUM(${flaky_runs}), NULLIF(SUM(${total_runs}), 0)) ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
