@@ -88,6 +88,37 @@ view: fenix_daily_android {
     filters: [date_date: "this month"]
   }
 
+  measure: current_flaky_rate_weighted {
+    type: number
+    description: "Weighted flaky rate for the current month."
+    sql: SAFE_DIVIDE(
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${flaky_runs} ELSE 0 END),
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${total_runs} ELSE NULL END)
+        ) ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+  }
+
+  measure: current_failure_rate_weighted {
+    type: number
+    description: "Weighted failure rate for the current month."
+    sql: SAFE_DIVIDE(
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${failed_runs} ELSE 0 END),
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${total_runs} ELSE NULL END)
+        ) ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+  }
+
+
   measure: total_tests_this_month {
     type: sum
     description: "Total number of test runs executed in the current month."
