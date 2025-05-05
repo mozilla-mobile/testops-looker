@@ -131,9 +131,9 @@ view: fenix_daily_android {
     description: "A health score based on flaky rate, failure rate, and run volume trends."
     sql:
     CASE
-      WHEN ${current_flaky_rate} >= 2 OR ${current_failure_rate} >= 2 OR ${total_tests_percentage_change} < -50 THEN -1 -- Unstable
-      WHEN ${current_flaky_rate} BETWEEN 1 AND 2 OR ${current_failure_rate} BETWEEN 1 AND 2 THEN 0 -- Monitor
-      ELSE 1 -- Stable
+      WHEN ${current_flaky_rate} >= 0.02 OR ${current_failure_rate} >= 0.02 OR ${total_tests_percentage_change} < -0.5 THEN -1 -- Unstable (≥2% or 50% drop)
+      WHEN ${current_flaky_rate} BETWEEN 0.01 AND 0.02 OR ${current_failure_rate} BETWEEN 0.01 AND 0.02 THEN 0 -- Monitor (1%–2%)
+      ELSE 1 -- Stable (<1%)
     END ;;
     value_format: "#"
     group_label: "Summary KPIs"
