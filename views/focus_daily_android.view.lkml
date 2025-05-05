@@ -68,7 +68,7 @@ view: focus_daily_android {
   measure: current_flaky_rate {
     type: average
     description: "Flaky rate over the last 30 days."
-    sql: ${flaky_runs} / ${total_runs} ;;
+    sql: SAFE_DIVIDE(${flaky_runs}, NULLIF(${total_runs}, 0)) ;;
     value_format: "0.##%"
     group_label: "Summary KPIs"
     filters: [date_date: "this month"]
@@ -77,7 +77,7 @@ view: focus_daily_android {
   measure: current_failure_rate {
     type: average
     description: "Failure rate for the current month."
-    sql: ${failed_runs} / ${total_runs} ;;
+    sql: SAFE_DIVIDE(${failed_runs}, NULLIF(${total_runs}, 0)) ;;
     value_format: "0.##%"
     group_label: "Summary KPIs"
     filters: [date_date: "this month"]
