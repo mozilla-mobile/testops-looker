@@ -35,4 +35,13 @@ view: ios_flaky_tests_daily {
   measure: count {
     type: count
   }
+
+  measure: current_flaky_rate {
+    type: average
+    description: "Flaky rate over the last 30 days."
+    sql: ${flaky_test_count} / ${total_tests} ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+    filters: [report_date: "this month"]
+  }
 }
