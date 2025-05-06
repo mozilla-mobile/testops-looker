@@ -3,27 +3,29 @@ view: taskcluster_android_metrics_view {
     sql:
       WITH data AS (
         SELECT
-          t.value AS label,
-          SUM(IF(result = 'completed', 1, 0)) AS completed,
-          SUM(IF(result = 'failed', 1, 0)) AS failed,
-          SUM(IF(result = 'canceled', 1, 0)) AS canceled,
-          SUM(IF(result = 'deadline-exceeded', 1, 0)) AS deadline,
+          t.tags.label AS label,
+          SUM(IF(r.state = 'completed', 1, 0)) AS completed,
+          SUM(IF(r.state = 'failed', 1, 0)) AS failed,
+          SUM(IF(r.state = 'canceled', 1, 0)) AS canceled,
+          SUM(IF(r.state = 'deadline-exceeded', 1, 0)) AS deadline,
           COUNT(*) AS count,
-          APPROX_QUANTILES(lag, 100)[OFFSET(50)] AS lag_p50,
-          APPROX_QUANTILES(lag, 100)[OFFSET(75)] AS lag_p75,
-          APPROX_QUANTILES(lag, 100)[OFFSET(99)] AS lag_p99,
-          APPROX_QUANTILES(execution, 100)[OFFSET(50)] AS execution_p50,
-          APPROX_QUANTILES(execution, 100)[OFFSET(75)] AS execution_p75,
-          APPROX_QUANTILES(execution, 100)[OFFSET(99)] AS execution_p99
+          APPROX_QUANTILES(TIMESTAMP_DIFF(r.started, r.scheduled, SECOND), 100)[OFFSET(50)] AS lag_p50,
+          APPROX_QUANTILES(TIMESTAMP_DIFF(r.started, r.scheduled, SECOND), 100)[OFFSET(75)] AS lag_p75,
+          APPROX_QUANTILES(TIMESTAMP_DIFF(r.started, r.scheduled, SECOND), 100)[OFFSET(99)] AS lag_p99,
+          APPROX_QUANTILES(TIMESTAMP_DIFF(r.resolved, r.started, SECOND), 100)[OFFSET(50)] AS execution_p50,
+          APPROX_QUANTILES(TIMESTAMP_DIFF(r.resolved, r.started, SECOND), 100)[OFFSET(75)] AS execution_p75,
+          APPROX_QUANTILES(TIMESTAMP_DIFF(r.resolved, r.started, SECOND), 100)[OFFSET(99)] AS execution_p99
         FROM
-          `moz-fx-data-shared-prod.taskclusteretl.task_definition` A
-          INNER JOIN `moz-fx-data-shared-prod.taskclusteretl.derived_task_summary` B
-            ON A.taskId = B.taskId,
-          UNNEST(tags) AS t
+          `moz-fx-data-shared-prod.fxci.tasks` t
+        JOIN
+          `moz-fx-data-shared-prod.fxci_derived.task_runs_v1` r
+        ON
+          t.task_id = r.task_id
         WHERE
-          t.key = "label"
-          AND REGEXP_CONTAINS(t.value, r"ui-test-apk|android-startup-test|test-apk")
-          AND A.created > TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 30 DAY)
+          t.tags.label IS NOT NULL
+          AND REGEXP_CONTAINS(t.tags.label, r"ui-test-apk|android-startup-test|test-apk")
+          AND t.submission_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+          AND r.submission_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
         GROUP BY label
       )
       SELECT
