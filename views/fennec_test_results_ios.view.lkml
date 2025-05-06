@@ -37,4 +37,15 @@ view: fennec_test_results_ios {
   measure: count {
     type: count
   }
+  measure: failure_count {
+    type: count
+    filters: [result: "failed"]
+  }
+  measure: monthly_failure_rate {
+    type: number
+    description: "Monthly failure rate calculated as total failed runs divided by total test runs."
+    sql: ${failure_count} * 1.0 / NULLIF(${count}, 0) ;;
+    value_format: "0.##%"
+    group_label: "Monthly Metrics"
+  }
 }
