@@ -44,4 +44,25 @@ view: ios_flaky_tests_daily {
     group_label: "Summary KPIs"
     filters: [report_date: "this month"]
   }
+
+  measure: total_tests_this_month {
+    type: sum
+    sql: CASE WHEN EXTRACT(MONTH FROM ${report_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+            THEN ${total_tests}
+            ELSE 0 END ;;
+  }
+
+  measure: total_tests_last_month {
+    type: sum
+    sql: CASE WHEN EXTRACT(MONTH FROM ${report_date}) = EXTRACT(MONTH FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
+            THEN ${total_tests}
+            ELSE 0 END ;;
+  }
+
+  measure: total_tests_percentage_change {
+    type: number
+    sql: (${total_tests_this_month} - ${total_tests_last_month}) / NULLIF(${total_tests_last_month}, 0) ;;
+    value_format_name: percent_2
+    group_label: "Summary KPIs"
+  }
 }
