@@ -49,6 +49,7 @@ view: ios_test_health_summary {
         THEN 0
         ELSE 1
       END ;;
+    group_label: "Summary KPIs"
     value_format: "#"
   }
 
