@@ -2,8 +2,8 @@ view: ios_test_health_summary {
   derived_table: {
     sql:
       SELECT
-        branch,
-        device,
+        results.branch AS branch,
+        result.device AS device,
         DATE(timestamp) AS report_date,
         -- agregamos joins virtuales
         AVG(CASE WHEN result = 'failed' THEN 1 ELSE 0 END) AS monthly_failure_rate,
