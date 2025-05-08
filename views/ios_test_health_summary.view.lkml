@@ -4,12 +4,19 @@ view: ios_test_health_summary {
       SELECT
         results.branch AS branch,
         results.device AS device,
-        DATE(timestamp) AS report_date,
-        -- agregamos joins virtuales
+        DATE(results.timestamp) AS report_date,
         AVG(CASE WHEN result = 'failed' THEN 1 ELSE 0 END) AS monthly_failure_rate,
-        -- suponiendo que puedes traer el flaky rate y change desde la otra tabla (join previo)
-        ANY_VALUE(flakiness.current_flaky_rate) AS current_flaky_rate,
-        ANY_VALUE(flakiness.total_tests_percentage_change) AS total_tests_percentage_change
+        SUM(flakiness.flaky_test_count) / NULLIF(SUM(flakiness.total_tests), 0) AS current_flaky_rate,
+        (
+          SUM(CASE WHEN EXTRACT(MONTH FROM flakiness.report_date) = EXTRACT(MONTH FROM CURRENT_DATE()) THEN flakiness.total_tests ELSE 0 END)
+          -
+          SUM(CASE WHEN EXTRACT(MONTH FROM flakiness.report_date) = EXTRACT(MONTH FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)) THEN flakiness.total_tests ELSE 0 END)
+        )
+        /
+        NULLIF(
+          SUM(CASE WHEN EXTRACT(MONTH FROM flakiness.report_date) = EXTRACT(MONTH FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)) THEN flakiness.total_tests ELSE 0 END),
+          0
+        ) AS total_tests_percentage_change
       FROM moz-mobile-tools.testops_stats.fennec_test_results_ios AS results
       LEFT JOIN moz-mobile-tools.testops_stats.ios_flaky_tests_daily AS flakiness
         ON results.branch = flakiness.branch
