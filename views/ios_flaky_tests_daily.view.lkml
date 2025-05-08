@@ -65,4 +65,13 @@ view: ios_flaky_tests_daily {
     value_format_name: percent_2
     group_label: "Summary KPIs"
   }
+
+  measure: flaky_failure_rate {
+    type: number
+    description: "Monthly flaky rate calculated as total flaky runs divided by total failures."
+    sql: SUM(${flaky_test_count}) / NULLIF(SUM(${total_tests}), 0) ;;
+    value_format: "0.##%"
+    group_label: "Monthly Metrics"
+  }
+
 }
