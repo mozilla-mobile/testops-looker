@@ -50,7 +50,7 @@ view: fennec_test_results_ios {
     type: number
     description: "Monthly failure rate calculated as total failed runs divided by total test runs."
     sql: ${failure_count} * 1.0 / NULLIF(${count}, 0) ;;
-    value_format: "0.##%"
+    value_format_name: percent_2
     group_label: "Monthly Metrics"
   }
 }
