@@ -35,4 +35,43 @@ view: ios_flaky_tests_daily {
   measure: count {
     type: count
   }
+
+  measure: current_flaky_rate {
+    type: average
+    description: "Flaky rate over the last 30 days."
+    sql: ${flaky_test_count} / ${total_tests} ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+    filters: [report_date: "this month"]
+  }
+
+  measure: total_tests_this_month {
+    type: sum
+    sql: CASE WHEN EXTRACT(MONTH FROM ${report_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+            THEN ${total_tests}
+            ELSE 0 END ;;
+  }
+
+  measure: total_tests_last_month {
+    type: sum
+    sql: CASE WHEN EXTRACT(MONTH FROM ${report_date}) = EXTRACT(MONTH FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
+            THEN ${total_tests}
+            ELSE 0 END ;;
+  }
+
+  measure: total_tests_percentage_change {
+    type: number
+    sql: (${total_tests_this_month} - ${total_tests_last_month}) / NULLIF(${total_tests_last_month}, 0) ;;
+    value_format_name: percent_2
+    group_label: "Summary KPIs"
+  }
+
+  measure: flaky_failure_rate {
+    type: number
+    description: "Monthly flaky rate calculated as total flaky runs divided by total failures."
+    sql: SUM(${flaky_test_count}) / NULLIF(SUM(${total_tests}), 0) ;;
+    value_format: "0.##%"
+    group_label: "Monthly Metrics"
+  }
+
 }

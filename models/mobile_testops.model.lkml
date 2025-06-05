@@ -73,6 +73,8 @@ explore: ios_flaky_tests_daily {}
 
 explore: ios_flaky_tests_daily_row_per_flay_test_name {}
 
+explore: ios_test_health_summary {}
+
 explore: report_incidents_view {}
 
 explore: report_bitrise_builds_staging {}

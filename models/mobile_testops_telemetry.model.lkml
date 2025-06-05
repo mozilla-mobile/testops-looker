@@ -13,3 +13,5 @@ explore: android_job_performance_view {}
 explore: android_job_durations {}
 
 explore: taskcluster_android_metrics_view {}
+
+explore: android_fxci_task_durations {}

@@ -44,7 +44,7 @@ view: focus_daily_android {
   measure: monthly_failure_rate {
     type: number
     description: "Monthly failure rate calculated as total failed runs divided by total test runs."
-    sql: SUM(${failed_runs}) / SUM(${total_runs}) ;;
+    sql: SAFE_DIVIDE(SUM(${failed_runs}), NULLIF(SUM(${total_runs}), 0)) ;;
     value_format: "0.##%"
     group_label: "Monthly Metrics"
   }
@@ -52,7 +52,7 @@ view: focus_daily_android {
   measure: monthly_flaky_rate {
     type: number
     description: "Monthly flaky rate calculated as total flaky runs divided by total test runs."
-    sql: SUM(${flaky_runs}) / SUM(${total_runs}) ;;
+    sql: SAFE_DIVIDE(SUM(${flaky_runs}), NULLIF(SUM(${total_runs}), 0)) ;;
     value_format: "0.##%"
     group_label: "Monthly Metrics"
   }
@@ -68,7 +68,7 @@ view: focus_daily_android {
   measure: current_flaky_rate {
     type: average
     description: "Flaky rate over the last 30 days."
-    sql: ${flaky_runs} / ${total_runs} ;;
+    sql: SAFE_DIVIDE(${flaky_runs}, NULLIF(${total_runs}, 0)) ;;
     value_format: "0.##%"
     group_label: "Summary KPIs"
     filters: [date_date: "this month"]
@@ -77,10 +77,40 @@ view: focus_daily_android {
   measure: current_failure_rate {
     type: average
     description: "Failure rate for the current month."
-    sql: ${failed_runs} / ${total_runs} ;;
+    sql: SAFE_DIVIDE(${failed_runs}, NULLIF(${total_runs}, 0)) ;;
     value_format: "0.##%"
     group_label: "Summary KPIs"
     filters: [date_date: "this month"]
+  }
+
+  measure: current_flaky_rate_weighted {
+    type: number
+    description: "Weighted flaky rate for the current month."
+    sql: SAFE_DIVIDE(
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${flaky_runs} ELSE 0 END),
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${total_runs} ELSE NULL END)
+        ) ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
+  }
+
+  measure: current_failure_rate_weighted {
+    type: number
+    description: "Weighted failure rate for the current month."
+    sql: SAFE_DIVIDE(
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${failed_runs} ELSE 0 END),
+          SUM(CASE WHEN EXTRACT(YEAR FROM ${date_date}) = EXTRACT(YEAR FROM CURRENT_DATE())
+                    AND EXTRACT(MONTH FROM ${date_date}) = EXTRACT(MONTH FROM CURRENT_DATE())
+                   THEN ${total_runs} ELSE NULL END)
+        ) ;;
+    value_format: "0.##%"
+    group_label: "Summary KPIs"
   }
 
   measure: total_tests_this_month {
@@ -123,13 +153,16 @@ view: focus_daily_android {
 
   measure: test_health_index {
     type: number
-    description: "A health score based on flaky rate, failure rate, and run volume trends."
+    description: "A health score based on flaky rate, failure rate, and run volume trends. Volume drop is only considered after the third week of the month."
     sql:
-    CASE
-      WHEN ${current_flaky_rate} >= 2 OR ${current_failure_rate} >= 2 OR ${total_tests_percentage_change} < -50 THEN -1 -- Unstable
-      WHEN ${current_flaky_rate} BETWEEN 1 AND 2 OR ${current_failure_rate} BETWEEN 1 AND 2 THEN 0 -- Monitor
-      ELSE 1 -- Stable
-    END ;;
+      CASE
+        WHEN ${current_flaky_rate_weighted} >= 0.02
+             OR ${current_failure_rate_weighted} >= 0.02
+             OR (EXTRACT(DAY FROM CURRENT_DATE()) >= 21 AND ${total_tests_percentage_change} < -0.5) THEN -1 -- Unstable
+        WHEN ${current_flaky_rate_weighted} BETWEEN 0.01 AND 0.02
+             OR ${current_failure_rate_weighted} BETWEEN 0.01 AND 0.02 THEN 0 -- Monitor
+        ELSE 1 -- Stable
+      END ;;
     value_format: "#"
     group_label: "Summary KPIs"
   }
@@ -151,7 +184,7 @@ view: focus_daily_android {
     type: number
     description: "Flaky rate for the current week (Monday-Sunday)."
     sql:
-        SUM(${flaky_runs}) / NULLIF(SUM(${total_runs}), 0) ;;
+        SAFE_DIVIDE(SUM(${flaky_runs}), NULLIF(SUM(${total_runs}), 0)) ;;
     value_format: "0.##%"
     group_label: "Weekly Metrics"
   }
