@@ -84,3 +84,5 @@ explore: report_jira_softvision_worklogs {}
 explore: report_jira_softvision_worklogs_total_per_month {}
 
 explore: report_sentry_crash_free_rate_session_staging {}
+
+explore: report_testrail_user_csv {}
