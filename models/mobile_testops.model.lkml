@@ -87,4 +87,4 @@ explore: report_sentry_crash_free_rate_session_staging {}
 
 explore: report_testrail_user_csv {}
 
-explore:  report_sentry_crash_free_rate {}
+explore: report_sentry_crash_free_rate {}
