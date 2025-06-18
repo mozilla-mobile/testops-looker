@@ -1,5 +1,5 @@
 view: report_sentry_crash_free_rate {
-  sql_table_name: `moz-mobile-tools.testops_dashboard.report_sentry_crash_free_rate` ;;
+  sql_table_name: `moz-mobile-tools.testops_dashboard.report_sentry_rates` ;;
   drill_fields: [id]
 
   dimension: id {
@@ -14,6 +14,10 @@ view: report_sentry_crash_free_rate {
   dimension: crash_free_rate_user {
     type: number
     sql: ${TABLE}.crash_free_rate_user ;;
+  }
+  dimension: adoption_rate_user {
+    type: number
+    sql: ${TABLE}.adoption_rate_user ;;
   }
   dimension_group: created {
     type: time
