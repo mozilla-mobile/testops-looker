@@ -1,5 +1,5 @@
 view: report_sentry_crash_free_rate_session_staging {
-  sql_table_name: `moz-mobile-tools.staging.report_sentry_rates` ;;
+  sql_table_name: `moz-mobile-tools.staging.report_sentry_crash_free_rate_session_staging` ;;
   drill_fields: [id]
 
   dimension: id {

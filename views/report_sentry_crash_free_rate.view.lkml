@@ -1,5 +1,5 @@
 view: report_sentry_crash_free_rate {
-  sql_table_name: `moz-mobile-tools.testops_dashboard.report_sentry_rates` ;;
+  sql_table_name: `moz-mobile-tools.testops_dashboard.report_sentry_crash_free_rate` ;;
   drill_fields: [id]
 
   dimension: id {
