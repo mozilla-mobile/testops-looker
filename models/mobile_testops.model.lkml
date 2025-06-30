@@ -90,3 +90,5 @@ explore: report_testrail_user_csv {}
 explore: report_sentry_crash_free_rate {}
 
 explore: report_testrail_users {}
+
+explore: report_bugzilla_softvision_bugs_staging {}
