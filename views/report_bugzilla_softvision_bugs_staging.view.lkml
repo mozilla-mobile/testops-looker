@@ -53,6 +53,10 @@ view: report_bugzilla_softvision_bugs_staging {
     type: string
     sql: ${TABLE}.bugzilla_summary ;;
   }
+  dimension: release_version {
+    type: string
+    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-[cb](\\d{3})") ;;
+  }
   measure: count {
     type: count
   }
