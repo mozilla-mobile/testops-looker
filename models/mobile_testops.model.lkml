@@ -92,3 +92,7 @@ explore: report_sentry_crash_free_rate {}
 explore: report_testrail_users {}
 
 explore: report_bugzilla_softvision_bugs_staging {}
+
+explore: report_test_plans_tmp {}
+
+explore: report_test_runs_tmp {}
