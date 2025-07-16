@@ -19,7 +19,9 @@ view: ios_flaky_tests_daily {
   }
   dimension: flaky_tests_ratio {
     type: number
+    description: "Flaky rate as a percentage (e.g., 0.23% displayed as 23%)."
     sql: ${TABLE}.flaky_tests_ratio ;;
+    value_format: "0.##%"  # Ensures percentage display
   }
   dimension_group: report {
     type: time
