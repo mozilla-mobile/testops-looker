@@ -100,3 +100,5 @@ explore: report_test_runs_tmp {}
 explore: report_test_results_l10n {}
 
 explore: report_test_results_beta {}
+
+explore: report_bugzilla_meta_bugs {}
