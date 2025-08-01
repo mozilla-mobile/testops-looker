@@ -63,6 +63,23 @@ view: report_bugzilla_softvision_bugs_staging {
     type: string
     sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-[cb](\d{3})") ;;
   }
+  dimension: release_version_nightly {
+    type: string
+    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-c(\d{3})") ;;
+  }
+
+  dimension: release_version_beta {
+    type: string
+    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-b(\d{3})") ;;
+  }
+  dimension: release_channel {
+    type: string
+    sql: CASE
+          WHEN REGEXP_CONTAINS(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-c\d{3}") THEN 'Nightly'
+          WHEN REGEXP_CONTAINS(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-b\d{3}") THEN 'Beta'
+          ELSE 'Other'
+        END ;;
+  }
   measure: count {
     type: count
   }
