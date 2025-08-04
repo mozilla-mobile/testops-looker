@@ -118,11 +118,11 @@ view: android_job_performance_view {
     label: "Weekly Avg Run Time (min)"
   }
 
-  filter: repository_filter {
-    sql: ${TABLE}.repository_name = {% parameter repository_name %} ;;
-  }
+  # filter: repository_filter {
+  #  sql: ${TABLE}.repository_name = {% parameter repository_name %} ;;
+  # }
 
-  filter: job_filter {
-    sql: ${TABLE}.job_name = {% parameter job_name %} ;;
-  }
+  # filter: job_filter {
+  #  sql: ${TABLE}.job_name = {% parameter job_name %} ;;
+  # }
 }
