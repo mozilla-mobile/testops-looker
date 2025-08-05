@@ -20,9 +20,33 @@ view: android_job_performance_view {
         WHERE
             job.result = 'success'
             AND TIMESTAMP(job.start_time) >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
-            AND repository.name = {% parameter repository_name._parameter_value %}
-            AND job_type.name = {% parameter job_name._parameter_value %}
-
+            {% if job_name._parameter_value == 'ui-test-apk-fenix-arm-debug' %}
+              'ui-test-apk-fenix-arm-debug'
+            {% elsif job_name._parameter_value == 'ui-test-apk-focus-arm-debug' %}
+              'ui-test-apk-focus-arm-debug'
+            {% elsif job_name._parameter_value == 'build-apk-fenix-debug' %}
+              'build-apk-fenix-debug'
+            {% elsif job_name._parameter_value == 'build-apk-focus-debug' %}
+              'build-apk-focus-debug'
+            {% elsif job_name._parameter_value == 'test-apk-fenix-debug' %}
+              'test-apk-fenix-debug'
+            {% elsif job_name._parameter_value == 'test-apk-focus-debug' %}
+              'test-apk-focus-debug'
+            {% else %}
+              'ui-test-apk-fenix-arm-debug'
+            {% endif %}
+          AND repository.name =
+            {% if repository_name._parameter_value == 'autoland' %}
+              'autoland'
+            {% elsif repository_name._parameter_value == 'mozilla-central' %}
+              'mozilla-central'
+            {% elsif repository_name._parameter_value == 'mozilla-beta' %}
+              'mozilla-beta'
+            {% elsif repository_name._parameter_value == 'mozilla-release' %}
+              'mozilla-release'
+            {% else %}
+              'mozilla-central'
+            {% endif %}
         GROUP BY
             week_start, job_name, repository_name
     )
