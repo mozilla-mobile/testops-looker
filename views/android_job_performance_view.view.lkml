@@ -22,6 +22,7 @@ view: android_job_performance_view {
             AND TIMESTAMP(job.start_time) >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
             AND repository.name = {% parameter repository_name %}
             AND job_type.name = {% parameter job_name %}
+
         GROUP BY
             week_start, job_name, repository_name
     )
