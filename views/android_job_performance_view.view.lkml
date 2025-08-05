@@ -20,8 +20,8 @@ view: android_job_performance_view {
         WHERE
             job.result = 'success'
             AND TIMESTAMP(job.start_time) >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
-            AND repository.name = {% parameter repository_name %}
-            AND job_type.name = {% parameter job_name %}
+            AND repository.name = "mozilla-central"
+            AND job_type.name = "ui-test-apk-fenix-arm-debug"
         GROUP BY
             week_start, job_name, repository_name
     )
