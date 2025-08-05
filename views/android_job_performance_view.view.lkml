@@ -20,6 +20,7 @@ view: android_job_performance_view {
         WHERE
             job.result = 'success'
             AND TIMESTAMP(job.start_time) >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
+            AND job_type.name =
             {% if job_name._parameter_value == 'ui-test-apk-fenix-arm-debug' %}
               'ui-test-apk-fenix-arm-debug'
             {% elsif job_name._parameter_value == 'ui-test-apk-focus-arm-debug' %}
