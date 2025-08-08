@@ -104,3 +104,5 @@ explore: report_test_results_beta {}
 explore: report_bugzilla_meta_bugs {}
 
 explore: report_testrail_test_results_staging_metrics {}
+
+explore: report_testrail_test_runs_staging {}
