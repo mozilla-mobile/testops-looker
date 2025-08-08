@@ -24,7 +24,7 @@ view: report_testrail_test_results_staging_metrics {
     sql: ${TABLE}.test_id ;;
     link: {
       label: "View Test"
-      url: "https://mozilla.testrail.io/index.php?/tests/view/${value}"
+      url: "https://mozilla.testrail.io/index.php?/tests/view/{{ value }}"
     }
   }
   dimension_group: testrail_completed {
