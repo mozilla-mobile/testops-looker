@@ -31,19 +31,11 @@ explore: report_test_case_coverage_prod {}
 
 explore: report_test_coverage_by_project_prod {}
 
-explore: irios_test_jira {}
-
-explore: katmerinotestresults {}
-
 explore: report_jira_qa_needed {}
 
 explore: report_jira_qa_requests {}
 
-explore: irios_test_jira_desktop {}
-
 explore: report_bugzilla_qe_needed {}
-
-explore: report_bugzilla_qe_needed_count_staging {}
 
 explore: report_bugzilla_qe_needed_count {}
 
@@ -51,13 +43,7 @@ explore: report_jira_qa_requests_new_issue_types {}
 
 explore: report_milestones {}
 
-explore: dummy_daily {}
-
 explore: report_testrail_milestones {}
-
-explore: iosinsightsdummy {}
-
-explore: iriostestreleasestestedview {}
 
 explore: fennec_test_results_ios {}
 
@@ -96,10 +82,6 @@ explore: report_bugzilla_softvision_bugs_staging {}
 explore: report_test_plans_tmp {}
 
 explore: report_test_runs_tmp {}
-
-explore: report_test_results_l10n {}
-
-explore: report_test_results_beta {}
 
 explore: report_bugzilla_meta_bugs {}
 
