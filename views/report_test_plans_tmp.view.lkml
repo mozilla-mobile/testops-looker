@@ -50,6 +50,10 @@ view: report_test_plans_tmp {
   dimension: testrail_plan_id {
     type: number
     sql: ${TABLE}.testrail_plan_id ;;
+    link: {
+      label: "View Plan"
+      url: "https://mozilla.testrail.io/index.php?/plans/view/{{ value }}"
+    }
   }
   measure: count {
     type: count

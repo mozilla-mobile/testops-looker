@@ -58,6 +58,10 @@ view: report_test_runs_tmp {
   dimension: testrail_run_id {
     type: number
     sql: ${TABLE}.testrail_run_id ;;
+    link: {
+      label: "View Run"
+      url: "https://mozilla.testrail.io/index.php?/runs/view/{{ value }}"
+    }
   }
   measure: count {
     type: count
