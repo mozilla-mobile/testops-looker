@@ -88,3 +88,5 @@ explore: report_bugzilla_meta_bugs {}
 explore: report_testrail_test_results_staging_metrics {}
 
 explore: report_testrail_test_runs_staging {}
+
+explore: report_jira_qa_requests_new_issue_types_prod {}
