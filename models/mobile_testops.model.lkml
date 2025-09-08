@@ -39,6 +39,8 @@ explore: report_bugzilla_qe_needed {}
 
 explore: report_bugzilla_qe_needed_count {}
 
+explore: report_bugzilla_query_by_keyword {}
+
 explore: report_jira_qa_requests_new_issue_types {}
 
 explore: report_testrail_milestones {}
