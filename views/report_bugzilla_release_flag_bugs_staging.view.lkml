@@ -23,7 +23,7 @@ view: report_bugzilla_release_flag_bugs_staging {
   }
   dimension: release_version {
     type: string
-    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-[cb](\d{3})") ;;
+    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_bug_qa_found_in, r"qa-found-in-[cb](\d{3})") ;;
   }
   dimension: bugzilla_bug_resolution {
     type: string
