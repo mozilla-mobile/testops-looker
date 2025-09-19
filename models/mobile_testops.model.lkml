@@ -94,3 +94,5 @@ explore: report_testrail_test_runs_staging {}
 explore: report_jira_qa_requests_new_issue_types_prod {}
 
 explore: report_bitrise_builds {}
+
+explore: report_bugzilla_release_flag_bugs_staging {}
