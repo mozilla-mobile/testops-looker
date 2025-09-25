@@ -45,6 +45,49 @@ view: report_bugzilla_release_flag_bugs_staging {
     type: number
     sql: ${TABLE}.bugzilla_release_version ;;
   }
+  dimension: release_version_int {
+    type: number
+    sql: SAFE_CAST(${release_version} AS INT64) ;;
+  }
+  dimension: versions_match {
+    type: yesno
+    sql: ${bugzilla_release_version} = ${release_version_int} ;;
+  }
+  dimension: bugzilla_bug_type {
+    type: string
+    sql: ${TABLE}.bugzilla_bug_type ;;
+  }
+  dimension: release_date {
+    type: date
+    sql:
+    CASE ${release_version_int}
+      WHEN 140 THEN DATE '2025-06-24'
+      WHEN 141 THEN DATE '2025-07-22'
+      WHEN 142 THEN DATE '2025-08-19'
+      WHEN 143 THEN DATE '2025-09-16'
+      WHEN 144 THEN DATE '2025-10-14'
+      WHEN 145 THEN DATE '2025-11-11'
+      WHEN 146 THEN DATE '2025-12-09'
+    END ;;
+  }
+  dimension: versions_match_flag {
+    type: yesno
+    sql:
+    SAFE_CAST(REGEXP_EXTRACT(${bugzilla_bug_qa_found_in}, r'qa-found-in-[cb](\\d{3})') AS INT64)
+    = ${release_version_int} ;;
+  }
+  dimension: open_at_release_debug {
+    type: string
+    sql:
+    CASE
+      WHEN SAFE_CAST(REGEXP_EXTRACT(${bugzilla_bug_qa_found_in}, r'qa-found-in-[cb](\\d{3})') AS INT64) != ${release_version_int}
+        THEN 'version_mismatch'
+      WHEN ${release_date} IS NULL THEN 'no_release_date'
+      WHEN ${bugzilla_bug_flag_fixed_date} IS NULL THEN 'never_fixed'
+      WHEN ${bugzilla_bug_flag_fixed_date} > ${release_date} THEN 'fixed_after_release'
+      ELSE 'fixed_by_release_date'
+    END ;;
+  }
   measure: count {
     type: count
     drill_fields: [id]

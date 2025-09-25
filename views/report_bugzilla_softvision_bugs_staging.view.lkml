@@ -80,6 +80,25 @@ view: report_bugzilla_softvision_bugs_staging {
           ELSE 'Other'
         END ;;
   }
+  dimension: days_to_fix_workdays_excl_start {
+    type: number
+    sql:
+      CASE
+        WHEN ${bugzilla_bug_resolved_at_date} IS NULL OR ${bugzilla_bug_created_date} IS NULL
+          THEN NULL
+        WHEN ${bugzilla_bug_resolved_at_date} < ${bugzilla_bug_created_date}
+          THEN NULL
+        ELSE (
+          SELECT COUNTIF(EXTRACT(DAYOFWEEK FROM d) NOT IN (1,7))
+          FROM UNNEST(
+            GENERATE_DATE_ARRAY(
+              ${bugzilla_bug_created_date}, -- exclude start day
+              ${bugzilla_bug_resolved_at_date}                        -- include end day
+            )
+          ) AS d
+        )
+      END ;;
+  }
   measure: count {
     type: count
   }
