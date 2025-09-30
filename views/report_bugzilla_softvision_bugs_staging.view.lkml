@@ -1,6 +1,12 @@
 view: report_bugzilla_softvision_bugs_staging {
   sql_table_name: `moz-mobile-tools.staging.report_bugzilla_softvision_bugs_staging` ;;
+  drill_fields: [id]
 
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}.id ;;
+  }
   dimension_group: bugzilla_bug_created {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
