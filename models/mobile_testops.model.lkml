@@ -102,3 +102,5 @@ explore: report_testrail_test_plans {}
 explore: report_testrail_test_results {}
 
 explore: report_testrail_test_runs {}
+
+explore: report_bugzilla_overall_bugs_staging {}
