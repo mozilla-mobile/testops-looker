@@ -71,68 +71,55 @@ view: report_bugzilla_overall_bugs_staging {
     sql: ${TABLE}.created_at ;;
   }
 
-  # Extract the token and state (done/blocked) tied to a nightly cycle c###
-  dimension: qa_ver_token {
-    type: string
-    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"(qa-ver-(?:done|blocked)-c\d{3})") ;;
-  }
-
-  dimension: qa_ver_state {
-    type: string
-    sql: LOWER(REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-ver-(done|blocked)-c\d{3}")) ;;
-  }
-  dimension: qa_investig_state {
-    type: string
-    sql: LOWER(REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-investig-(done|blocked)-c\d{3}")) ;;
-  }
-
-  # Nightly cycle number (e.g., 141 from qa-ver-done-c141)
-  dimension: qa_ver_c_nightly_num {
+  # For qa-ver (done/blocked)
+  dimension: qa_ver_cycle_c_num {
     type: number
-    sql: SAFE_CAST(REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-ver-(?:done|blocked)-c(\d{3})") AS INT64) ;;
+    sql: SAFE_CAST(
+        REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard,
+          r"qa-ver-(?:done|blocked)?-?c(\d{3})"
+        ) AS INT64) ;;
   }
-  dimension: qa_investig_c_nightly_num {
-    type: number
-    sql: SAFE_CAST(REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-investig-(?:done|blocked)-c(\d{3})") AS INT64) ;;
-  }
-  # Derived Beta = Nightly - 1
-  dimension: qa_ver_b_beta_num {
-    type: number
-    sql: CASE WHEN ${qa_ver_c_nightly_num} IS NOT NULL THEN ${qa_ver_c_nightly_num} - 1 END ;;
-  }
-  dimension: qa_investig_b_beta_num {
-    type: number
-    sql: CASE WHEN ${qa_investig_c_nightly_num} IS NOT NULL THEN ${qa_investig_c_nightly_num} - 1 END ;;
-  }
-
-  # Pretty cycle label: c141/b140
-  dimension: qa_ver_cycle {
+  dimension: qa_ver_cycle_label {
     type: string
     sql:
-    CASE
-      WHEN ${qa_ver_c_nightly_num} IS NOT NULL
-      THEN CONCAT('c', CAST(${qa_ver_c_nightly_num} AS STRING), '/b', CAST(${qa_ver_b_beta_num} AS STRING))
+    CASE WHEN ${qa_ver_cycle_c_num} IS NOT NULL
+      THEN CONCAT('c', CAST(${qa_ver_cycle_c_num} AS STRING),
+                  '/b', CAST(${qa_ver_cycle_c_num} - 1 AS STRING))
     END ;;
   }
-  dimension: qa_investig_cycle {
+  # For triage
+  dimension: qa_triage_cycle_c_num {
+    type: number
+    sql: SAFE_CAST(
+        REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard,
+          r"qa-triage(?:-done)?-?c(\d{3})"
+        ) AS INT64) ;;
+  }
+  dimension: qa_triage_cycle_label {
     type: string
     sql:
-    CASE
-      WHEN ${qa_investig_c_nightly_num} IS NOT NULL
-      THEN CONCAT('c', CAST(${qa_investig_c_nightly_num} AS STRING), '/b', CAST(${qa_investig_b_beta_num} AS STRING))
+    CASE WHEN ${qa_triage_cycle_c_num} IS NOT NULL
+      THEN CONCAT('c', CAST(${qa_triage_cycle_c_num} AS STRING),
+                  '/b', CAST(${qa_triage_cycle_c_num} - 1 AS STRING))
     END ;;
   }
-  measure: bugs_verified_total {
-    type: count
-    filters: [qa_ver_state: "done,blocked"]
-    description: "qa-ver done OR blocked"
+# For investig (done/blocked)
+  dimension: qa_investig_cycle_c_num {
+    type: number
+    sql: SAFE_CAST(
+        REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard,
+          r"qa-investig-(?:done|blocked)?-?c(\d{3})"
+        ) AS INT64) ;;
   }
-
-  measure: bugs_investigated_total {
-    type: count
-    filters: [qa_investig_state: "done,blocked"]
-    description: "qa-ver done OR blocked"
+  dimension: qa_investig_cycle_label {
+    type: string
+    sql:
+    CASE WHEN ${qa_investig_cycle_c_num} IS NOT NULL
+      THEN CONCAT('c', CAST(${qa_investig_cycle_c_num} AS STRING),
+                  '/b', CAST(${qa_investig_cycle_c_num} - 1 AS STRING))
+    END ;;
   }
+  # to here
 
   measure: count {
     type: count
