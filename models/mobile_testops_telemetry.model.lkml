@@ -4,8 +4,8 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 datagroup: job_performance_refresh {
   label: "Job Performance Data Refresh"
-  max_cache_age: "24 hours"  # Refreshes the PDT once per day
-  sql_trigger: SELECT MAX(start_time) FROM `moz-fx-data-shared-prod.treeherder_db.job`;;
+  max_cache_age: "1 minute"  # Temporarily force rebuild
+  sql_trigger: SELECT CURRENT_TIMESTAMP() ;;  # Always triggers
 }
 
 explore: android_job_performance_view {}
