@@ -103,4 +103,10 @@ explore: report_testrail_test_results {}
 
 explore: report_testrail_test_runs {}
 
-explore: report_bugzilla_overall_bugs_staging {}
+explore: report_bugzilla_overall_bugs_staging {
+  join: bug_release_label {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${bug_release_label.bug_id} = ${report_bugzilla_overall_bugs_staging.id} ;;
+  }
+}
