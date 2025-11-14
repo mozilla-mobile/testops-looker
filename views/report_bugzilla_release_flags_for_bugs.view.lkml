@@ -7,11 +7,6 @@ view: report_bugzilla_release_flags_for_bugs {
     type: number
     sql: ${TABLE}.id ;;
   }
-  dimension: id {
-    primary_key: yes
-    type: number
-    sql: ${TABLE}.id ;;
-  }
 
   dimension_group: created {
     type: time
