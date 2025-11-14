@@ -20,55 +20,38 @@ view: android_job_performance_view {
         WHERE
             job.result = 'success'
             AND TIMESTAMP(job.start_time) >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
-            AND repository.name = {% parameter repository_name %}
-            AND job_type.name = {% parameter job_name %}
+            AND repository.name IN ('autoland', 'mozilla-central', 'mozilla-beta', 'mozilla-release')
+            AND job_type.name IN (
+                'ui-test-apk-fenix-arm-debug',
+                'ui-test-apk-focus-arm-debug',
+                'build-apk-fenix-debug',
+                'build-apk-focus-debug',
+                'test-apk-fenix-debug',
+                'test-apk-focus-debug'
+            )
         GROUP BY
             week_start, job_name, repository_name
     )
 
-    SELECT
-        *,
-        -- 4-week Rolling Average Calculation
-        AVG(weekly_avg_queued_seconds) OVER (
-            PARTITION BY repository_name, job_name
-            ORDER BY week_start
-            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
-        ) AS rolling_4_week_avg_queued_seconds,
+      SELECT
+      *,
+      -- 4-week Rolling Average Calculation
+      AVG(weekly_avg_queued_seconds) OVER (
+      PARTITION BY repository_name, job_name
+      ORDER BY week_start
+      ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
+      ) AS rolling_4_week_avg_queued_seconds,
 
-        AVG(weekly_avg_run_seconds) OVER (
-            PARTITION BY repository_name, job_name
-            ORDER BY week_start
-            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
-        ) AS rolling_4_week_avg_run_seconds
+      AVG(weekly_avg_run_seconds) OVER (
+      PARTITION BY repository_name, job_name
+      ORDER BY week_start
+      ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
+      ) AS rolling_4_week_avg_run_seconds
 
-    FROM weekly_aggregates
-    WHERE DATE(week_start) >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 WEEK)
-    ORDER BY week_start DESC;
-        ;;
-  }
-
-  parameter: repository_name {
-    type: string
-    label: "Repository Name"
-    default_value: "mozilla-central"
-
-    allowed_value: { label: "Autoland" value: "autoland" }
-    allowed_value: { label: "Mozilla Central" value: "mozilla-central" }
-    allowed_value: { label: "Mozilla Beta" value: "mozilla-beta" }
-    allowed_value: { label: "Mozilla Release" value: "mozilla-release" }
-  }
-
-  parameter: job_name {
-    type: string
-    label: "Job Name"
-    default_value: "ui-test-apk-fenix-arm-debug"
-
-    allowed_value: { label: "Fenix Debug UI Test" value: "ui-test-apk-fenix-arm-debug" }
-    allowed_value: { label: "Focus Debug UI Test" value: "ui-test-apk-focus-arm-debug" }
-    allowed_value: { label: "Fenix Build APK" value: "build-apk-fenix-debug" }
-    allowed_value: { label: "Focus Build APK" value: "build-apk-focus-debug" }
-    allowed_value: { label: "Fenix Debug Unit Test" value: "test-apk-fenix-debug" }
-    allowed_value: { label: "Focus Debug Unit Test" value: "test-apk-focus-debug" }
+      FROM weekly_aggregates
+      WHERE DATE(week_start) >= DATE_SUB(CURRENT_DATE(), INTERVAL 5 WEEK)
+      ORDER BY week_start DESC;
+      ;;
   }
 
   dimension: week_start {
@@ -78,11 +61,13 @@ view: android_job_performance_view {
 
   dimension: job_name_field {
     type: string
+    label: "Job Name"
     sql: ${TABLE}.job_name ;;
   }
 
   dimension: repository_name_field {
     type: string
+    label: "Repository"
     sql: ${TABLE}.repository_name ;;
   }
 
@@ -113,12 +98,4 @@ view: android_job_performance_view {
     value_format_name: decimal_2
     label: "Weekly Avg Run Time (min)"
   }
-
-  # filter: repository_filter {
-  #  sql: ${TABLE}.repository_name = {% parameter repository_name %} ;;
-  # }
-
-  # filter: job_filter {
-  #  sql: ${TABLE}.job_name = {% parameter job_name %} ;;
-  # }
 }
