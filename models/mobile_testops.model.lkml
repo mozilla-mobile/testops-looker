@@ -110,3 +110,15 @@ explore: report_bugzilla_overall_bugs_staging {
     sql_on: ${bug_release_label.bug_id} = ${report_bugzilla_overall_bugs_staging.id} ;;
   }
 }
+
+explore: report_bugzilla_overall_bugs {
+  join: bug_release_label {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${bug_release_label.bug_id} = ${report_bugzilla_overall_bugs.id} ;;
+  }
+}
+
+explore: report_bugzilla_release_flags_for_bugs {}
+
+explore: report_bugzilla_softvision_bugs {}
