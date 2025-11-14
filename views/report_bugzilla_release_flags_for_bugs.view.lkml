@@ -1,7 +1,12 @@
-view: report_bugzilla_release_flag_bugs_staging {
-  sql_table_name: `moz-mobile-tools.testops_dashboard.report_bugzilla_release_flag_bugs_staging` ;;
+view: report_bugzilla_release_flags_for_bugs {
+  sql_table_name: `moz-mobile-tools.testops_dashboard.report_bugzilla_release_flags_for_bugs` ;;
   drill_fields: [id]
 
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}.id ;;
+  }
   dimension: id {
     primary_key: yes
     type: number
