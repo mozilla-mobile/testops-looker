@@ -65,8 +65,6 @@ explore: ios_test_health_summary {}
 
 explore: report_incidents_view {}
 
-explore: report_bitrise_builds_staging {}
-
 explore: report_jira_softvision_worklogs {}
 
 explore: report_jira_softvision_worklogs_total_per_month {}
