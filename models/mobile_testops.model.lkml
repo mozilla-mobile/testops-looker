@@ -122,3 +122,5 @@ explore: report_bugzilla_overall_bugs {
 explore: report_bugzilla_release_flags_for_bugs {}
 
 explore: report_bugzilla_softvision_bugs {}
+
+explore: report_sentry_rates_prod {}
