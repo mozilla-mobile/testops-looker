@@ -2,10 +2,13 @@ view: bug_release_label {
   derived_table: {
     sql:
       WITH src AS (
-        SELECT
-          id AS bug_id,
-          LOWER(CAST(bugzilla_qa_whiteboard AS STRING)) AS qb
-        FROM `moz-mobile-tools.testops_dashboard.report_bugzilla_overall_bugs_staging`
+        SELECT id AS bug_id,
+               LOWER(CAST(bugzilla_qa_whiteboard AS STRING)) AS qb
+        FROM `moz-mobile-tools.testops_dashboard.report_bugzilla_overall_bugs`   -- prod
+        UNION DISTINCT
+        SELECT id AS bug_id,
+               LOWER(CAST(bugzilla_qa_whiteboard AS STRING)) AS qb
+        FROM `moz-mobile-tools.testops_dashboard.report_bugzilla_overall_bugs_staging`  -- staging
       ),
       matches AS (
         SELECT
@@ -14,8 +17,8 @@ view: bug_release_label {
         FROM src
         CROSS JOIN UNNEST(
           REGEXP_EXTRACT_ALL(
-            COALESCE(qb, ''),
-            r'qa[-_ ]?ver(?:-(?:done|blocked))?-?c(\d{2,3})'
+            COALESCE(qb, ''),                       -- protect UNNEST from NULL
+            r'qa[-_ ]?ver(?:-(?:done|blocked))?-?c(\d{2,3})'  -- allow 2–3 digits, tolerate qa_ver / qa ver
           )
         ) AS cn
       )
