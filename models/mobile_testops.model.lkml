@@ -102,19 +102,23 @@ explore: report_testrail_test_results {}
 explore: report_testrail_test_runs {}
 
 explore: report_bugzilla_overall_bugs_staging {
-  join: bug_release_label {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: CAST(${bug_release_label.bug_id} AS INT64) = CAST(${report_bugzilla_overall_bugs_staging.id} AS INT64) ;;
-    }
+ join: bug_release_label_staging {
+ type: left_outer
+ relationship: one_to_many
+ sql_on:
+    CAST(${bug_release_label_staging.bug_id} AS INT64)
+    = CAST(${report_bugzilla_overall_bugs_staging.id} AS INT64) ;;
+ }
 }
 
 explore: report_bugzilla_overall_bugs {
-  join: bug_release_label {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: CAST(${bug_release_label.bug_id} AS INT64) = CAST(${report_bugzilla_overall_bugs.id} AS INT64) ;;
-  }
+ join: bug_release_label {
+ type: left_outer
+ relationship: one_to_many
+ sql_on:
+  CAST(${bug_release_label.bug_id} AS INT64)
+      = CAST(${report_bugzilla_overall_bugs.id} AS INT64) ;;
+}
 }
 
 explore: report_bugzilla_release_flags_for_bugs {}

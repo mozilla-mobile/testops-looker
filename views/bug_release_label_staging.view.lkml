@@ -1,11 +1,11 @@
-view: bug_release_label {
+view: bug_release_label_staging {
   derived_table: {
     sql:
       WITH src AS (
         SELECT
           id AS bug_id,
           LOWER(CAST(bugzilla_qa_whiteboard AS STRING)) AS qb
-        FROM `moz-mobile-tools.testops_dashboard.report_bugzilla_overall_bugs`
+        FROM `moz-mobile-tools.testops_dashboard.report_bugzilla_overall_bugs_staging`
       ),
       matches AS (
         SELECT bug_id,
