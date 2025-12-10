@@ -126,3 +126,7 @@ explore: report_bugzilla_release_flags_for_bugs {}
 explore: report_bugzilla_softvision_bugs {}
 
 explore: report_sentry_rates_prod {}
+
+explore: report_testrail_test_health_preflight {}
+
+explore: report_testrail_test_health_staging {}
