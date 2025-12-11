@@ -5,13 +5,13 @@ view: report_testrail_test_health_preflight {
     type: number
     sql: ${TABLE}.avg_runtime ;;
   }
-  dimension: case_id {
+  dimension: testrail_case_id {
     type: number
-    sql: ${TABLE}.case_id ;;
+    sql: ${TABLE}.testrail_case_id ;;
   }
-  dimension: case_name {
+  dimension: testrail_case_name {
     type: string
-    sql: ${TABLE}.case_name ;;
+    sql: ${TABLE}.testrail_case_name ;;
   }
   dimension: most_recent_runtime {
     type: number
@@ -34,9 +34,9 @@ view: report_testrail_test_health_preflight {
     type: number
     sql: ${TABLE}.pass_rate ;;
   }
-  dimension: project_id {
+  dimension: testrail_project_id {
     type: number
-    sql: ${TABLE}.project_id ;;
+    sql: ${TABLE}.testrail_project_id ;;
   }
   dimension: status_history_1 {
     type: number
@@ -54,12 +54,17 @@ view: report_testrail_test_health_preflight {
     type: number
     sql: ${TABLE}.status_history_4 ;;
   }
-  dimension: suite_name {
+  dimension: testrail_suite_name {
     type: string
-    sql: ${TABLE}.suite_name ;;
+    sql: ${TABLE}.testrail_suite_name ;;
+  }
+  dimension_group: created_on {
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+    sql: ${TABLE}.created_on ;;
   }
   measure: count {
     type: count
-    drill_fields: [case_name, suite_name]
+    drill_fields: [testrail_case_name, testrail_suite_name]
   }
 }
