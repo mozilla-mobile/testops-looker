@@ -85,6 +85,16 @@ view: report_bugzilla_release_flags_for_bugs {
       WHEN 146 THEN DATE '2025-12-09'
       WHEN 147 THEN DATE '2026-01-13'
       WHEN 148 THEN DATE '2026-02-24'
+      WHEN 149 THEN DATE '2026-03-24'
+      WHEN 150 THEN DATE '2026-04-21'
+      WHEN 151 THEN DATE '2026-05-19'
+      WHEN 152 THEN DATE '2026-06-16'
+      WHEN 153 THEN DATE '2026-07-21'
+      WHEN 154 THEN DATE '2026-08-18'
+      WHEN 155 THEN DATE '2026-09-15'
+      WHEN 156 THEN DATE '2026-10-13'
+      WHEN 157 THEN DATE '2026-11-10'
+      WHEN 158 THEN DATE '2026-12-08'
     END ;;
   }
   dimension: versions_match_flag {
