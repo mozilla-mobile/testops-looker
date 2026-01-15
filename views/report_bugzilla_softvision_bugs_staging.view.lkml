@@ -67,7 +67,7 @@ view: report_bugzilla_softvision_bugs_staging {
   }
   dimension: release_version {
     type: string
-    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-[cb](\d{3})") ;;
+    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-[cbr](\d{3})") ;;
   }
   dimension: release_version_nightly {
     type: string
@@ -78,11 +78,18 @@ view: report_bugzilla_softvision_bugs_staging {
     type: string
     sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-b(\d{3})") ;;
   }
+
+  dimension: release_version_release {
+    type: string
+    sql: REGEXP_EXTRACT(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-r(\d{3})") ;;
+  }
+
   dimension: release_channel {
     type: string
     sql: CASE
           WHEN REGEXP_CONTAINS(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-c\d{3}") THEN 'Nightly'
           WHEN REGEXP_CONTAINS(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-b\d{3}") THEN 'Beta'
+          WHEN REGEXP_CONTAINS(${TABLE}.bugzilla_qa_whiteboard, r"qa-found-in-r\d{3}") THEN 'Release'
           ELSE 'Other'
         END ;;
   }
