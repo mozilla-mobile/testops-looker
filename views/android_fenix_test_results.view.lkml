@@ -26,6 +26,12 @@ view: android_fenix_test_results {
     sql: ${TABLE}.failed_runs ;;
   }
 
+  dimension: total_duration {
+    type: number
+    sql: ${TABLE}.total_duration ;;
+    hidden: yes
+  }
+
   dimension: last_updated {
     type: date_time
     sql: ${TABLE}.last_updated ;;
@@ -42,5 +48,13 @@ view: android_fenix_test_results {
     type: number
     sql: SAFE_DIVIDE(${failed_runs}, ${total_runs}) * 100 ;;
     value_format: "0.00\%"
+  }
+
+  # Average duration
+  dimension: avg_duration_seconds {
+    type: number
+    sql: SAFE_DIVIDE(${total_duration}, ${total_runs}) ;;
+    value_format: "0.00"
+    description: "Average test duration in seconds"
   }
 }
