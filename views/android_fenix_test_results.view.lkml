@@ -105,6 +105,13 @@ view: android_fenix_test_results {
     description: "Test duration buckets in seconds"
   }
 
+  measure: avg_duration_overall {
+    type: average
+    sql: SAFE_DIVIDE(${total_duration}, ${total_runs}) ;;
+    value_format: "0.00"
+    description: "Average duration across all tests"
+  }
+
   measure: count {
     type: count
   }
