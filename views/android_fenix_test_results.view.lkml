@@ -104,4 +104,8 @@ view: android_fenix_test_results {
     sql: SAFE_DIVIDE(${total_duration}, ${total_runs}) ;;
     description: "Test duration buckets in seconds"
   }
+
+  measure: count {
+    type: count
+  }
 }
