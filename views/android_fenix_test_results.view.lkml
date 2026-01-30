@@ -112,6 +112,38 @@ view: android_fenix_test_results {
     description: "Average duration across all tests"
   }
 
+  measure: total_runs_sum {
+    type: sum
+    sql: ${total_runs} ;;
+    description: "Sum of all test runs"
+  }
+
+  measure: flaky_runs_sum {
+    type: sum
+    sql: ${flaky_runs} ;;
+    description: "Sum of all flaky runs"
+  }
+
+  measure: failed_runs_sum {
+    type: sum
+    sql: ${failed_runs} ;;
+    description: "Sum of all failed runs"
+  }
+
+  measure: overall_flaky_rate {
+    type: number
+    sql: SAFE_DIVIDE(${flaky_runs_sum}, ${total_runs_sum}) * 100 ;;
+    value_format: "0.00\%"
+    description: "Overall flaky rate across all tests"
+  }
+
+  measure: overall_failure_rate {
+    type: number
+    sql: SAFE_DIVIDE(${failed_runs_sum}, ${total_runs_sum}) * 100 ;;
+    value_format: "0.00\%"
+    description: "Overall failure rate across all tests"
+  }
+
   measure: count {
     type: count
   }
