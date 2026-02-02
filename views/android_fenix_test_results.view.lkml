@@ -89,6 +89,12 @@ view: android_fenix_test_results {
     sql: ${class_name} LIKE '%efficiency%' ;;
   }
 
+  # Is benchmark test
+  dimension: is_benchmark_test {
+    type:  yesno
+    sql:  ${class_name} LIKE '%benchmark%' ;;
+  }
+
   # Pass rate (inverse of flaky + failure)
   dimension: pass_rate {
     type: number
