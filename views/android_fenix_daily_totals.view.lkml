@@ -1,10 +1,11 @@
 view: android_fenix_daily_totals {
   sql_table_name: `moz-mobile-tools.testops_results.fenix_daily_totals` ;;
 
-  dimension: date {
-    type: date
+  dimension_group: date {
+    type: time
+    timeframes: [date, week, month, year]
+    datatype: date
     sql: ${TABLE}.date ;;
-    primary_key: yes
   }
 
   dimension: total_runs {
