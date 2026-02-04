@@ -136,3 +136,5 @@ explore: android_fenix_test_results {}
 explore: android_focus_test_results {}
 
 explore: android_fenix_daily_totals {}
+
+explore: android_focus_daily_totals {}
