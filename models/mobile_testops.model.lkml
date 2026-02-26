@@ -134,3 +134,5 @@ explore: report_testrail_test_health_staging {}
 explore: android_fenix_test_results {}
 
 explore: android_focus_test_results {}
+
+explore: report_jira_qa_requests_desktop_staging {}
