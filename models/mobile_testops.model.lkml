@@ -139,4 +139,6 @@ explore: report_jira_qa_requests_desktop_staging {}
 
 explore: android_fenix_daily_totals {}
 
+explore: android_fenix_efficiency_daily_totals {}
+
 explore: android_focus_daily_totals {}
