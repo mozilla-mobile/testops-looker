@@ -3,17 +3,47 @@ view: report_jira_qa_requests_desktop_staging {
   # Change from sql_table_name to derived_table
   derived_table: {
     sql:
-      WITH split_trains AS (
-        SELECT
-          *,
-          CAST(REGEXP_EXTRACT(TRIM(part), r'\d+') AS INT64) AS train_number
-        FROM `moz-mobile-tools.testops_dashboard.report_jira_qa_requests_desktop_staging`,
-        UNNEST(SPLIT(COALESCE(jira_tested_trains, ''), ',')) AS part
-      )
+
+    -- Base table
+    WITH base AS (
       SELECT *
-      FROM split_trains
-      WHERE train_number IS NOT NULL
-    ;;
+      FROM `moz-mobile-tools.testops_dashboard.report_jira_qa_requests_desktop_staging`
+    ),
+
+      -- Train explosion
+      split_trains AS (
+      SELECT
+      base.*,
+      CAST(REGEXP_EXTRACT(TRIM(part), r'\d+') AS INT64) AS train_number
+      FROM base,
+      UNNEST(SPLIT(COALESCE(jira_tested_trains, ''), ',')) AS part
+      WHERE REGEXP_EXTRACT(TRIM(part), r'\d+') IS NOT NULL
+      ),
+
+      -- Deferral extraction (from base, NOT split_trains)
+      deferral_events AS (
+      SELECT DISTINCT
+      jira_key,
+      CAST(from_version AS INT64) AS deferred_from_version,
+      CAST(to_version   AS INT64) AS deferred_to_version
+      FROM base,
+      UNNEST(REGEXP_EXTRACT_ALL(jira_timeline, r'Moved from Fx(\d+)\s+to Fx\d+')) AS from_version
+      WITH OFFSET pos
+      JOIN UNNEST(REGEXP_EXTRACT_ALL(jira_timeline, r'Moved from Fx\d+\s+to Fx(\d+)')) AS to_version
+      WITH OFFSET pos2
+      ON pos = pos2
+      )
+
+      -- Final table
+      SELECT
+      st.*,
+      d.deferred_from_version,
+      d.deferred_to_version
+      FROM split_trains st
+      LEFT JOIN deferral_events d
+      USING (jira_key)
+
+      ;;
   }
 
   drill_fields: [id]
@@ -123,6 +153,21 @@ view: report_jira_qa_requests_desktop_staging {
   dimension: train_number {
     type: number
     sql: ${TABLE}.train_number ;;
+  }
+
+  dimension: deferred_from_version {
+    type: number
+    sql: ${TABLE}.deferred_from_version ;;
+  }
+
+  dimension: deferred_to_version {
+    type: number
+    sql: ${TABLE}.deferred_to_version ;;
+  }
+
+  measure: deferred_features {
+    type: count_distinct
+    sql: ${jira_key} ;;
   }
 
   # Use this when you want "how many Jira requests per train"
