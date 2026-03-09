@@ -29,13 +29,17 @@ view: android_fenix_test_results {
     type: date_time
     sql: ${TABLE}.last_updated ;;
   }
-  dimension: last_failure_date {
-    type: date
+   dimension_group: last_failure {
+    type: time
+    timeframes: [date]
+    datatype: date
     sql: ${TABLE}.last_failure_date ;;
     description: "Date of the most recent failure for this test"
   }
-  dimension: last_flaky_date {
-    type: date
+  dimension_group: last_flaky {
+    type: time
+    timeframes: [date]
+    datatype: date
     sql: ${TABLE}.last_flaky_date ;;
     description: "Date of the most recent flaky occurrence for this test"
   }
