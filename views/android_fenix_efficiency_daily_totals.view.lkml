@@ -1,5 +1,5 @@
-view: android_focus_daily_totals {
-  sql_table_name: `moz-mobile-tools.testops_results.focus_daily_totals` ;;
+view: android_fenix_efficiency_daily_totals {
+  sql_table_name: `moz-mobile-tools.testops_results.fenix_efficiency_daily_totals` ;;
 
   dimension_group: date {
     type: time
