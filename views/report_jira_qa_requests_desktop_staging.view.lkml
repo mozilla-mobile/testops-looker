@@ -32,15 +32,43 @@ view: report_jira_qa_requests_desktop_staging {
       JOIN UNNEST(REGEXP_EXTRACT_ALL(jira_timeline, r'Moved from Fx\d+\s+to Fx(\d+)')) AS to_version
       WITH OFFSET pos2
       ON pos = pos2
+      ),
+
+      -- Late label extraction
+      split_late_labels AS (
+        SELECT
+          base.jira_key,
+          TRIM(label) AS single_label,
+          CASE
+            WHEN REGEXP_CONTAINS(TRIM(label), r'^late-c\d+$') THEN 'late-c'
+            WHEN REGEXP_CONTAINS(TRIM(label), r'^late-b\d+$') THEN 'late-b'
+            WHEN REGEXP_CONTAINS(TRIM(label), r'^late-doc\d+$') THEN 'late-doc'
+            WHEN REGEXP_CONTAINS(TRIM(label), r'^late-rdns\d+$') THEN 'late-rdns'
+            ELSE NULL
+          END AS late_label_type,
+          CAST(REGEXP_EXTRACT(TRIM(label), r'(\d+)$') AS INT64) AS late_label_version
+        FROM base,
+        UNNEST(SPLIT(COALESCE(jira_labels, ''), ',')) AS label
+        WHERE REGEXP_CONTAINS(TRIM(label), r'^late-(c|b|doc|rdns)\d+$')
       )
 
       -- Final table
       SELECT
-      st.*,
-      d.deferred_from_version,
-      d.deferred_to_version
+        st.*,
+        d.deferred_from_version,
+        d.deferred_to_version,
+        l.single_label,
+        l.late_label_type,
+        l.late_label_version,
+        CONCAT(
+          st.jira_key, '|',
+          COALESCE(l.late_label_type, ''), '|',
+          COALESCE(CAST(l.late_label_version AS STRING), '')
+        ) AS late_label_event_key
       FROM split_trains st
       LEFT JOIN deferral_events d
+      USING (jira_key)
+      LEFT JOIN split_late_labels l
       USING (jira_key)
 
       ;;
@@ -165,6 +193,27 @@ view: report_jira_qa_requests_desktop_staging {
     sql: ${TABLE}.deferred_to_version ;;
   }
 
+  dimension: single_label {
+    type: string
+    sql: ${TABLE}.single_label ;;
+  }
+
+  dimension: late_label_type {
+    type: string
+    sql: ${TABLE}.late_label_type ;;
+  }
+
+  dimension: late_label_version {
+    type: number
+    sql: ${TABLE}.late_label_version ;;
+  }
+
+  dimension: late_label_event_key {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.late_label_event_key ;;
+  }
+
   measure: deferred_features {
     type: count_distinct
     sql: ${jira_key} ;;
@@ -180,5 +229,23 @@ view: report_jira_qa_requests_desktop_staging {
   measure: jira_count {
     type: count_distinct
     sql: ${jira_key} ;;
+  }
+
+  measure: late_cb_count {
+    type: count_distinct
+    filters: [late_label_type: "late-c,late-b"]
+    sql: ${late_label_event_key} ;;
+  }
+
+  measure: late_doc_count {
+    type: count_distinct
+    filters: [late_label_type: "late-doc"]
+    sql: ${late_label_event_key} ;;
+  }
+
+  measure: late_rdns_count {
+    type: count_distinct
+    filters: [late_label_type: "late-rdns"]
+    sql: ${late_label_event_key} ;;
   }
 }
