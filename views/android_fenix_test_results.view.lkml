@@ -116,6 +116,13 @@ view: android_fenix_test_results {
     sql: SAFE_DIVIDE(${total_duration}, ${total_runs}) ;;
     description: "Test duration buckets in seconds"
   }
+  # Last updated grouping
+  dimension_group: updated {
+    type: time
+    timeframes: [date, week, month]
+    datatype: timestamp
+    sql: ${TABLE}.last_updated ;;
+  }
   measure: avg_duration_overall {
     type: average
     sql: SAFE_DIVIDE(${total_duration}, ${total_runs}) ;;
