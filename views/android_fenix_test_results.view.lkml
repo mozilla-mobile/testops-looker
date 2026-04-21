@@ -43,6 +43,13 @@ view: android_fenix_test_results {
     sql: ${TABLE}.last_flaky_date ;;
     description: "Date of the most recent flaky occurrence for this test"
   }
+  dimension_group: first_seen {
+    type: time
+    timeframes: [date, week, month]
+    datatype: date
+    sql: ${TABLE}.first_seen_date ;;
+    description: "Date this test was first seen in CI results"
+  }
   # Computed rates
   dimension: flaky_rate {
     type: number
