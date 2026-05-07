@@ -144,3 +144,5 @@ explore: android_fenix_daily_totals {}
 explore: android_fenix_efficiency_daily_totals {}
 
 explore: android_focus_daily_totals {}
+
+explore: android_fenix_conversion_tracking {}
