@@ -43,6 +43,13 @@ view: android_fenix_test_results {
     sql: ${TABLE}.last_flaky_date ;;
     description: "Date of the most recent flaky occurrence for this test"
   }
+  dimension_group: first_seen {
+    type: time
+    timeframes: [date, week, month]
+    datatype: date
+    sql: ${TABLE}.first_seen_date ;;
+    description: "Date this test was first seen in CI results"
+  }
   # Computed rates
   dimension: flaky_rate {
     type: number
@@ -102,6 +109,19 @@ view: android_fenix_test_results {
     type:  yesno
     sql:  ${class_name} LIKE '%benchmark%' ;;
   }
+  # Efficiency test category based on sub-package
+  dimension: efficiency_category {
+    type: string
+    sql: CASE
+          WHEN ${class_name} LIKE '%efficiency.navigation.reachability%' THEN 'Navigation Reachability'
+          WHEN ${class_name} LIKE '%efficiency.navigation.interaction%' THEN 'Navigation Interaction'
+          WHEN ${class_name} LIKE '%efficiency.tests%' THEN 'Core Efficiency'
+          WHEN ${class_name} LIKE '%efficiency.examples%' THEN 'Examples'
+          WHEN ${class_name} LIKE '%efficiency%' THEN 'Other Efficiency'
+          ELSE NULL
+        END ;;
+    description: "Category of efficiency test based on sub-package. NULL for non-efficiency tests."
+  }
   # Pass rate (inverse of flaky + failure)
   dimension: pass_rate {
     type: number
@@ -115,6 +135,13 @@ view: android_fenix_test_results {
     style: integer
     sql: SAFE_DIVIDE(${total_duration}, ${total_runs}) ;;
     description: "Test duration buckets in seconds"
+  }
+  # Last updated grouping
+  dimension_group: updated {
+    type: time
+    timeframes: [date, week, month]
+    datatype: timestamp
+    sql: ${TABLE}.last_updated ;;
   }
   measure: avg_duration_overall {
     type: average
