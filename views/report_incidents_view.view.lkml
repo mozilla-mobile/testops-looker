@@ -38,6 +38,10 @@ view: report_incidents_view {
     type: string
     sql: ${TABLE}.updated_date ;;
   }
+  dimension: version {
+    type: string
+    sql: ${TABLE}.version ;;
+  }
   measure: count {
     type: count
   }
