@@ -45,4 +45,11 @@ view: report_test_coverage_by_project_prod {
     type: count
     drill_fields: []
   }
+
+  measure: total_tests {
+    type: sum
+    sql: ${test_count_sum} ;;
+    value_format_name: decimal_0
+    description: "Sum of test cases"
+  }
 }
