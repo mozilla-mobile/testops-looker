@@ -4,6 +4,7 @@ view: android_ios_automation_coverage {
       WITH latest_snapshot AS (
         SELECT MAX(DATE(created_at)) AS snapshot_date
         FROM `moz-mobile-tools.testops_dashboard.report_test_coverage_by_project_prod`
+        WHERE project_name_abbrev IN ('fenix', 'firefox-ios')
       ),
       filtered AS (
         SELECT
