@@ -148,3 +148,11 @@ explore: android_focus_daily_totals {}
 explore: report_jira_softvision_issues_qa_teams_staging {}
 
 explore: report_jira_softvision_issues_qa_teams {}
+
+explore: android_fenix_conversion_tracking {}
+
+explore: android_fenix_conversion_progress {}
+
+explore: android_fenix_efficiency_test_authors {}
+
+explore: android_ios_automation_coverage {}
