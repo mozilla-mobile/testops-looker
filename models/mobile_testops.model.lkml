@@ -146,3 +146,5 @@ explore: android_fenix_efficiency_daily_totals {}
 explore: android_focus_daily_totals {}
 
 explore: report_jira_softvision_issues_qa_teams_staging {}
+
+explore: report_jira_softvision_issues_qa_teams {}
