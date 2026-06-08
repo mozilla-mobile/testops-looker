@@ -19,7 +19,7 @@ view: android_ios_coverage_trend {
         GROUP BY coverage_week, category
       )
       SELECT
-        coverage_week,
+        FORMAT_DATE('%Y-%m-%d', coverage_week) AS coverage_week,
         category,
         automated,
         addressable,
@@ -29,11 +29,10 @@ view: android_ios_coverage_trend {
     ;;
   }
 
-  dimension_group: coverage {
-    type: time
-    timeframes: [date, week, month]
-    datatype: date
+  dimension: coverage_week {
+    type: string
     sql: ${TABLE}.coverage_week ;;
+    order_by_field: coverage_week
   }
 
   dimension: category {
