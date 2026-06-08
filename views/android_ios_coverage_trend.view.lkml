@@ -29,8 +29,9 @@ view: android_ios_coverage_trend {
     ;;
   }
 
-  dimension: coverage_week {
-    type: date
+  dimension_group: coverage {
+    type: time
+    timeframes: [date, week, month]
     datatype: date
     sql: ${TABLE}.coverage_week ;;
   }
