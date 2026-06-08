@@ -61,4 +61,10 @@ view: android_ios_coverage_trend {
     value_format: "0.0\%"
     description: "Average automation coverage percentage"
   }
+
+  measure: total_automated {
+    type: sum
+    sql: ${automated} ;;
+    description: "Number of automated (Completed) test cases"
+  }
 }
