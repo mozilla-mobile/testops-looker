@@ -32,7 +32,6 @@ view: android_ios_coverage_trend {
   dimension: coverage_week {
     type: string
     sql: ${TABLE}.coverage_week ;;
-    order_by_field: coverage_week
   }
 
   dimension: category {
