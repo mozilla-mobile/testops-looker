@@ -156,3 +156,5 @@ explore: android_fenix_conversion_progress {}
 explore: android_fenix_efficiency_test_authors {}
 
 explore: android_ios_automation_coverage {}
+
+explore: android_ios_coverage_trend {}
