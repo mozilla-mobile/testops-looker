@@ -160,3 +160,5 @@ explore: android_ios_automation_coverage {}
 explore: android_ios_coverage_trend {}
 
 explore: android_fenix_conversion_trend {}
+
+explore: android_fenix_test_sunset_verdict {}
