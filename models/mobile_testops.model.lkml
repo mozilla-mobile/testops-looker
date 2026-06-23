@@ -158,3 +158,11 @@ explore: android_fenix_efficiency_test_authors {}
 explore: android_ios_automation_coverage {}
 
 explore: android_ios_automation_coverage_tae {}
+
+explore: android_ios_coverage_trend {}
+
+explore: android_fenix_conversion_trend {}
+
+explore: android_fenix_test_sunset_verdict {}
+
+explore: android_fenix_efficiency_flaky_attention {}

@@ -19,9 +19,10 @@ view: android_fenix_efficiency_test_authors {
     description: "Number of commits to the TAE efficiency directory by this author"
   }
 
-  measure: total_tests {
+  measure: total_commits {
     type: sum
     sql: ${test_count} ;;
+    label: "Total Commits"
     description: "Total commits to TAE efficiency directory"
   }
 
