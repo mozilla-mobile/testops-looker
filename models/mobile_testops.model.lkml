@@ -166,3 +166,5 @@ explore: android_fenix_conversion_trend {}
 explore: android_fenix_test_sunset_verdict {}
 
 explore: android_fenix_efficiency_flaky_attention {}
+
+explore: ttsignal {}
