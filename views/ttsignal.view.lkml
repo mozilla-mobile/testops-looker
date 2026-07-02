@@ -181,4 +181,10 @@ view: ttsignal {
     description: "Rows where the test run pre-dates the build (excluded from wait/active)"
     filters: [status: "%run<build%"]
   }
+
+  measure: avg_milestones_per_week {
+    type: number
+    sql: COUNT(DISTINCT ${milestone_id}) / NULLIF(COUNT(DISTINCT ${completed_on_week}), 0) ;;
+    value_format_name: decimal_1
+  }
 }
