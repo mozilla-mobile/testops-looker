@@ -1,9 +1,9 @@
 view: report_incidents_view {
   sql_table_name: `moz-mobile-tools.testops_dashboard.report_incidents_view` ;;
 
-  dimension: comment {
+  dimension: fixed_build {
     type: string
-    sql: ${TABLE}.comment ;;
+    sql: ${TABLE}.fixed_build ;;
   }
   dimension: incident_link {
     type: string
@@ -34,9 +34,10 @@ view: report_incidents_view {
     type: string
     sql: ${TABLE}.summary ;;
   }
-  dimension: updated_date {
-    type: string
-    sql: ${TABLE}.updated_date ;;
+  dimension_group: closed_date {
+    type: time
+    timeframes: [raw, time, date, week, month, quarter, year]
+      sql: ${TABLE}.closed_date ;;
   }
   dimension: version {
     type: string
