@@ -168,3 +168,5 @@ explore: android_fenix_test_sunset_verdict {}
 explore: android_fenix_efficiency_flaky_attention {}
 
 explore: ttsignal {}
+
+explore: report_jira_softvision_issues_other_teams {}
