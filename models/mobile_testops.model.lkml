@@ -169,4 +169,6 @@ explore: android_fenix_efficiency_flaky_attention {}
 
 explore: ttsignal {}
 
+explore: ttsignal_ios_release {}
+
 explore: report_jira_softvision_issues_other_teams {}
