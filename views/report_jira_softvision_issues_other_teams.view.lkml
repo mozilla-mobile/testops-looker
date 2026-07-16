@@ -87,6 +87,10 @@ view: report_jira_softvision_issues_other_teams {
     datatype: datetime
     sql: ${TABLE}.jira_updated_at ;;
   }
+  dimension: jira_issue_type {
+    type: string
+    sql: ${TABLE}.jira_issue_type ;;
+  }
   measure: count {
     type: count
     drill_fields: [id, jira_reporter_name, jira_project_name, jira_reporter_username]

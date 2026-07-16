@@ -90,6 +90,10 @@ view: report_jira_softvision_issues_qa_teams_staging {
     type: string
     sql: ${TABLE}.jira_summary ;;
   }
+  dimension: jira_issue_type {
+    type: string
+    sql: ${TABLE}.jira_issue_type ;;
+  }
   measure: count {
     type: count
     drill_fields: [id, jira_reporter_name, jira_project_name, jira_reporter_username]
