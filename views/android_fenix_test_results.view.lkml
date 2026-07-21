@@ -113,11 +113,16 @@ view: android_fenix_test_results {
   dimension: efficiency_category {
     type: string
     sql: CASE
-          WHEN ${class_name} LIKE '%efficiency.navigation.reachability%' THEN 'Navigation Reachability'
-          WHEN ${class_name} LIKE '%efficiency.navigation.interaction%' THEN 'Navigation Interaction'
-          WHEN ${class_name} LIKE '%efficiency.navigation.behavior%' THEN 'Navigation Behavior'
+          WHEN ${class_name} LIKE '%efficiency.generation.reachability%'
+            OR ${class_name} LIKE '%efficiency.navigation.reachability%' THEN 'Reachability'
+          WHEN ${class_name} LIKE '%efficiency.generation.pairs%' THEN 'Pairs'
+          WHEN ${class_name} LIKE '%efficiency.generation.interaction%'
+            OR ${class_name} LIKE '%efficiency.navigation.interaction%' THEN 'Interaction'
+          WHEN ${class_name} LIKE '%efficiency.generation.behavior%'
+            OR ${class_name} LIKE '%efficiency.navigation.behavior%' THEN 'Behavior'
+          WHEN ${class_name} LIKE '%efficiency.devtools%'
+            OR ${class_name} LIKE '%efficiency.examples%' THEN 'DevTools'
           WHEN ${class_name} LIKE '%efficiency.tests%' THEN 'Core Efficiency'
-          WHEN ${class_name} LIKE '%efficiency.examples%' THEN 'Examples'
           WHEN ${class_name} LIKE '%efficiency%' THEN 'Other Efficiency'
           ELSE NULL
         END ;;
