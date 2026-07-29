@@ -174,3 +174,5 @@ explore: ttsignal_ios_release {}
 explore: report_jira_softvision_issues_other_teams {}
 
 explore: android_fenix_efficiency_stability_streak {}
+
+explore: android_fenix_efficiency_stability_tolerance {}
