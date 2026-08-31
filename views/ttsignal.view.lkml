@@ -39,7 +39,7 @@ view: ttsignal {
 
   dimension_group: build_produced {
     type: time
-    timeframes: [raw, time, date, week, month]
+    timeframes: [raw, time, date, week, month, day_of_week, day_of_week_index]
     sql: ${TABLE}.build_produced ;;
     description: "When the candidate APK was produced on archive.mozilla.org"
   }
