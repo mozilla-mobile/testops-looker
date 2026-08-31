@@ -103,6 +103,14 @@ view: ttsignal {
     hidden: yes
   }
 
+  dimension: weekend_affected {
+    type: yesno
+    sql: EXTRACT(DAYOFWEEK FROM ${build_produced_raw}) IN (1, 7)      -- built Sat/Sun
+      OR EXTRACT(DAYOFWEEK FROM ${completed_on_raw})   IN (1, 7)      -- signed off Sat/Sun
+      OR DATE_DIFF(DATE(${completed_on_raw}), DATE(${build_produced_raw}), WEEK) > 0 ;;
+    description: "Build → sign-off window spanned a Sat/Sun. Calendar effect, not process speed — the weekend lands in wait or active depending on when the run was opened."
+  }
+
   # ── Measures ──
   # NOTE: Looker `type: median`/`percentile` on BigQuery use APPROX_QUANTILES
   # (approximate). At this volume (dozens of milestones per cycle) it is
