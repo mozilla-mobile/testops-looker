@@ -176,3 +176,5 @@ explore: report_jira_softvision_issues_other_teams {}
 explore: android_fenix_efficiency_stability_streak {}
 
 explore: android_fenix_efficiency_stability_tolerance {}
+
+explore: android_fenix_efficiency_vs_legacy_reliability {}
