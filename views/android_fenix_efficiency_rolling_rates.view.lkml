@@ -2,8 +2,13 @@ view: android_fenix_efficiency_rolling_rates {
   derived_table: {
     sql:
       WITH d AS (
-        SELECT date, total_runs, failed_runs, flaky_runs
+        SELECT 'TAE' AS suite, date, total_runs, failed_runs, flaky_runs
         FROM `moz-mobile-tools.testops_results.fenix_efficiency_daily_totals`
+        WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY date ORDER BY total_runs DESC) = 1
+        UNION ALL
+        SELECT 'Legacy', date, total_runs, failed_runs, flaky_runs
+        FROM `moz-mobile-tools.testops_results.fenix_daily_totals`
         WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
         QUALIFY ROW_NUMBER() OVER (PARTITION BY date ORDER BY total_runs DESC) = 1
       ),
@@ -14,6 +19,8 @@ view: android_fenix_efficiency_rolling_rates {
         SELECT '30 days', 2, * FROM d
       )
       SELECT
+        CONCAT(suite, ' ', window_label) AS row_key,
+        suite,
         window_label,
         sort_order,
         SUM(total_runs) AS runs,
@@ -22,13 +29,25 @@ view: android_fenix_efficiency_rolling_rates {
         SAFE_DIVIDE(SUM(failed_runs), SUM(total_runs)) * 100 AS failure_pct,
         SAFE_DIVIDE(SUM(flaky_runs), SUM(total_runs)) * 100 AS flaky_pct
       FROM w
-      GROUP BY window_label, sort_order
+      GROUP BY suite, window_label, sort_order
     ;;
+  }
+
+  dimension: row_key {
+    type: string
+    primary_key: yes
+    hidden: yes
+    sql: ${TABLE}.row_key ;;
+  }
+
+  dimension: suite {
+    type: string
+    sql: ${TABLE}.suite ;;
+    label: "Suite"
   }
 
   dimension: window_label {
     type: string
-    primary_key: yes
     sql: ${TABLE}.window_label ;;
     order_by_field: sort_order
     label: "Window"
