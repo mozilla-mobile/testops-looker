@@ -171,6 +171,8 @@ explore: ttsignal {}
 
 explore: ttsignal_ios_release {}
 
+explore: ttsignal_desktop {}
+
 explore: report_jira_softvision_issues_other_teams {}
 
 explore: android_fenix_efficiency_stability_streak {}
