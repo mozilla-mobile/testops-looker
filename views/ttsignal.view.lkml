@@ -39,7 +39,7 @@ view: ttsignal {
 
   dimension_group: build_produced {
     type: time
-    timeframes: [raw, time, date, week, month]
+    timeframes: [raw, time, date, week, month, day_of_week, day_of_week_index]
     sql: ${TABLE}.build_produced ;;
     description: "When the candidate APK was produced on archive.mozilla.org"
   }
@@ -101,6 +101,14 @@ view: ttsignal {
     timeframes: [raw, time, date]
     sql: ${TABLE}.ingested_at ;;
     hidden: yes
+  }
+
+  dimension: weekend_affected {
+    type: yesno
+    sql: EXTRACT(DAYOFWEEK FROM ${build_produced_raw}) IN (1, 7)      -- built Sat/Sun
+      OR EXTRACT(DAYOFWEEK FROM ${completed_on_raw})   IN (1, 7)      -- signed off Sat/Sun
+      OR DATE_DIFF(DATE(${completed_on_raw}), DATE(${build_produced_raw}), WEEK) > 0 ;;
+    description: "Build → sign-off window spanned a Sat/Sun. Calendar effect, not process speed — the weekend lands in wait or active depending on when the run was opened."
   }
 
   # ── Measures ──
